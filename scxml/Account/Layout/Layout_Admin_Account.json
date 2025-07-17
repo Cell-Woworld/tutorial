@@ -1,0 +1,62 @@
+{
+  "layout": [
+    {
+      "id": "::Learning.LayoutTemplate.uuid",
+      "component": "Section",
+      "subcomponent": "div",
+      "description": "A container for updating scripts",
+      "items": [
+        {
+          "id": "admin_maintain_account",
+          "component": "Section",
+          "subcomponent": "div",
+          "items": [
+            {
+              "id": "admin_maintain_account_create",
+              "component": "v-btn",
+              "content": "::Learning.Language[::Language][new]",
+              "color": "primary",
+              "class": "btn-right-align",
+              "style": "margin:5px 10px 0px;"
+            }
+          ]
+        },
+        {
+          "id": "account_list",
+          "component": "Editable_DataTable",
+          "style": "position:fixed;left:3vw;top:100px;width:94vw;max-height:calc(94vh - 110px);overflow:auto;",
+          "dataTable": {
+            "headers": [
+              {
+                "text": "::Learning.Language[::Language][admin_account_account]",
+                "value": "account"
+              },
+              {
+                "text": "::Learning.Language[::Language][admin_account_authority]",
+                "value": "authority",
+                "style": "margin-top:5px;"
+              },
+              {
+                "text": "",
+                "value": "detail"
+              }
+            ],
+            "recordset": "::(::Learning.AccountView.list)"
+          }
+        }
+      ]
+    }
+  ],
+  "methodList": [
+    {
+      "component": "Section_L2",
+      "functionName": "handleClick",
+      "functionValue": "../Account/js/admin/Section_L2_handleClick.js"
+    },
+    {
+      "component": "DialogCard",
+      "functionName": "handleClick",
+      "functionValue": "../Account/js/admin/DialogCard_handleClick.js"
+    }
+  ]
+}

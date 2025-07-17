@@ -1,0 +1,150 @@
+{
+  "layout": [
+    {
+      "id": "app_member_banner",
+      "component": "img",
+      "style": "position:absolute;top:0px;left:0px;width:100%;height:10.5vh;",
+      "src": "@/assets/img/01-04.png"
+    },
+    {
+      "id": "app_member_container",
+      "component": "Section",
+      "subcomponent": "div",
+      "style": "position:absolute;top:11vh;left:0px;width:100%;height:70.5vh;background-color:#f2f2f2;border-radius:10px;box-shadow:2px 2px 2px 1px #00000033;overflow:hidden auto;",
+      "items": [
+        {
+          "component": "Section",
+          "subcomponent": "div",
+          "id": "app_member_profile_container",
+          "style": "margin:5px 2% 0px;padding: 10px 3%;width:96%;background-color:white;border-radius:10px;box-shadow:2px 2px 2px 1px #00000033;",
+          "items": [
+            {
+              "component": "div",
+              "id": "app_member_accountTitle",
+              "style": "font-size:large;font-weight:bold;",
+              "content":"::Learning.Language[::Language][app_member_account]"
+            },
+            {
+              "component": "div",
+              "id": "app_member_accountContent",
+              "style": "font-size:large;color:darkgray;",
+              "content":"::Learning.Account.account"
+            },
+            {
+              "component": "div",
+              "id": "app_member_authorityTitle",
+              "style": "font-size:large;font-weight:bold;",
+              "content":"::Learning.Language[::Language][app_member_authority]"
+            },
+            {
+              "component": "div",
+              "id": "app_member_authorityContent",
+              "style": "font-size:large;color:darkgray;",
+              "content":"::Learning.Language[::Language][admin_member_::Learning.Account.const[AUTHORITY_NAME][::Learning.Account.authority]]"
+            },
+            {
+              "component": "div",
+              "id": "app_member_expiredDateTitle",
+              "style": "font-size:large;font-weight:bold;",
+              "content":"::Learning.Language[::Language][admin_member_expiredDate]"
+            },
+            {
+              "component": "div",
+              "id": "app_member_expiredDateContent",
+              "style": "font-size:large;color:darkgray;",
+              "content":"#::Learning.Account.effectiveDate# ~ #::Learning.Account.expiredDate# (::Learning.Language[::Language][app_member_payment_::Learning.Global.const[PAYMENT_TYPE][::Learning.Account.paymentType][name]])"
+            }
+          ]
+        },
+        {
+          "component": "Section",
+          "subcomponent": "div",
+          "id": "app_member_setting_container",
+          "style": "margin:5px 2% 0px;padding: 10px 3%;width:96%;background-color:white;border-radius:10px;box-shadow:2px 2px 2px 1px #00000033;",
+          "items": [
+            {
+              "component": "div",
+              "id": "app_member_setting_title",
+              "content":"::Learning.Language[::Language][app_setting_title]",
+              "style": "margin-left:-2%;font-size:large;font-weight:bold;"
+            },
+            {
+              "component": "v-checkbox",
+              "id": "app_member_setting_initUpdate",
+              "label":"::Learning.Language[::Language][app_setting_realtime_initUpdate]",
+              "value": "::Learning.Account.realtimeInitUpdate",
+              "style": "font-size:large;"
+            },
+            {
+              "component": "v-select",
+              "id": "app_member_setting_alertByPushMsg",
+              "label":"::Learning.Language[::Language][app_setting_alert_byPushMsg]",
+              "multiple": "true",
+              "style": "margin:0px;max-width:80%;font-size:small;",
+              "value": "::(::Learning.Account.alertByPushMsg)",
+              "invisible": "::('::Learning.Account.deviceId' == '')",
+              "items": [
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio_principal]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Principal_StopProfit]" },
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio_principal]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Principal_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Wallet_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_margin_rate]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][MgnRatio_UpperLimit]" },
+                { "text": "::Learning.Language[::Language][title_singleUnrealizedPnl]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Single_StopProfit]" },
+                { "text": "::Learning.Language[::Language][title_singleUnrealizedPnl]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Single_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_singleRealizedLoss]", "value": "::Learning.Global.const[ALERT_TYPE][Single_RealizedLoss]" }
+              ]
+            },
+            {
+              "component": "v-select",
+              "id": "app_member_setting_alertByEmail",
+              "label":"::Learning.Language[::Language][app_setting_alert_byEmail]",
+              "multiple": "true",
+              "style": "margin:0px;max-width:80%;font-size:small;",
+              "value": "::(::Learning.Account.alertByEmail)",
+              "items": [
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio_principal]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Principal_StopProfit]" },
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio_principal]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Principal_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Wallet_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_margin_rate]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][MgnRatio_UpperLimit]" },
+                { "text": "::Learning.Language[::Language][title_singleUnrealizedPnl]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Single_StopProfit]" },
+                { "text": "::Learning.Language[::Language][title_singleUnrealizedPnl]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Single_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_singleRealizedLoss]", "value": "::Learning.Global.const[ALERT_TYPE][Single_RealizedLoss]" }
+              ]
+            },
+            {
+              "component": "v-select",
+              "id": "app_member_setting_alertBySMS",
+              "label":"::Learning.Language[::Language][app_setting_alert_bySMS]",
+              "multiple": "true",
+              "value": "::(::Learning.Account.alertBySMS)",
+              "style": "margin:0px;max-width:80%;font-size:small;",
+              "invisible": "::('::Learning.Account.deviceId' != '')",
+              "items": [
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio_principal]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Principal_StopProfit]" },
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio_principal]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Principal_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_unrealizedRatio]::Learning.Language[::Language][app_alert_config_lowerLimit]", "value": "::Learning.Global.const[ALERT_TYPE][Wallet_StopLoss]" },
+                { "text": "::Learning.Language[::Language][title_margin_rate]::Learning.Language[::Language][app_alert_config_upperLimit]", "value": "::Learning.Global.const[ALERT_TYPE][MgnRatio_UpperLimit]" }
+              ]
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "methodList": [
+    {
+      "component": "Section",
+      "functionName": "handleClick",
+      "functionValue": "../Account/js/Section_handleClick.js"
+    },
+    {
+      "component": "Section",
+      "functionName": "handleChanged",
+      "functionValue": "../Account/js/Section_handleChanged.js"
+    },
+    {
+      "component": "DialogCard",
+      "functionName": "handleClick",
+      "functionValue": "../Account/js/DialogCard_handleClick.js"
+    }
+  ]
+}

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_GetSession" qt:editorversion="4.10.2">
+    <state id="CallSP_GetSession">
+        <qt:editorinfo scenegeometry="298.56;353.47;165.85;26.42;489.97;600.17" geometry="298.56;353.47;-132.71;-327.05;489.97;600.17"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="228.17;364.84;236.32;105.18;303.88;338.14" geometry="-70.39;11.37;8.15;-259.66;303.88;338.14"/>
+            <transition type="external" event="Database.Error.Account.GetSession" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_CallSP_GetSession">
+                <qt:editorinfo startTargetFactors="79.58;96.49"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="471.45;215.47;328.32;165.47;120;100" geometry="243.28;-149.37;-143.13;-50;120;100"/>
+                <transition type="internal" event="Account.GetSession" target="CallStoredProcedure"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="389.75;362.33;304.25;312.33;171;100" geometry="161.58;-2.51;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.GetSession"/>
+                        <param name="callback_message" expr="Account.GetSession.Result"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.GetSession"/>
+                        <param name="err_message" expr="Database.Error.Account.GetSession"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Account.GetSession" target="CallSP">
+                    <qt:editorinfo endTargetFactors="94.97;75.68"/>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="304.89;550.67;221.89;500.67;120;100" geometry="6.33;197.20;-83;-50;120;100"/>
+            <transition type="external" target="Final_CallSP_GetSession"/>
+        </state>
+    </state>
+    <final id="Final_CallSP_GetSession">
+        <qt:editorinfo scenegeometry="477.16;678.86;457.16;658.86;40;40" geometry="477.16;678.86;-20;-20;40;40"/>
+    </final>
+</scxml>

@@ -1,0 +1,10 @@
+{
+  "WEB_MAX_WIDTH": "400",
+  "SCXML_ESCAPE_LIST": [
+    { "to_be_replaced":">\r\n *<", "replace_with": "><" },
+    { "to_be_replaced":">\n *<", "replace_with": "><" },
+    { "to_be_replaced":"\r\n", "replace_with": "" },
+    { "to_be_replaced":"\n", "replace_with": "" },
+    { "to_be_replaced":"'", "replace_with": "&apos;" }
+  ]
+}

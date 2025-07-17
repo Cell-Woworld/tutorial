@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="WanHe_WebsocketService" qt:editorversion="4.12.4">
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="389.43;467.44;369.43;447.44;40;40" geometry="389.43;467.44;-20;-20;40;40"/>
+    </final>
+    <state id="Learning_WebsocketService">
+        <qt:editorinfo scenegeometry="191.17;298.86;37.59;34.41;703.68;378.85" geometry="191.17;298.86;-153.58;-264.45;703.68;378.85"/>
+        <state id="Init">
+            <qt:editorinfo scenegeometry="329.89;292.16;179.39;232.11;120;100" geometry="16.92;-57.88;-150.50;-60.05;120;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;Websocket&quot;})</script>
+            </onentry>
+            <transition type="external" target="WaitConfig" cond="::return.Bio.Cell.NewRNA">
+                <qt:editorinfo endTargetFactors="14.29;50.62"/>
+            </transition>
+            <transition type="external" target="Final_1"/>
+        </state>
+        <state id="WaitConfig">
+            <qt:editorinfo scenegeometry="504.28;282.11;373.78;232.11;120;100" geometry="191.31;-67.93;-130.50;-50;120;100"/>
+            <transition type="internal" event="Websocket.Service.Config" target="Running">
+                <qt:editorinfo endTargetFactors="5.64;48.71" startTargetFactors="88.18;52.34"/>
+                <script>Websocket.Service.Config</script>
+            </transition>
+        </state>
+        <state id="Running">
+            <qt:editorinfo scenegeometry="818.66;205.02;564.66;148.32;274;278.32" geometry="505.69;-145.02;-254;-56.70;274;278.32"/>
+            <transition type="internal" event="Web.AddProto">
+                <script>Web.AddProto</script>
+            </transition>
+            <transition type="internal" event="Web.AddJS">
+                <script>Web.AddJS</script>
+            </transition>
+            <transition type="internal" event="Web.RunJS">
+                <script>Web.RunJS</script>
+            </transition>
+            <transition type="internal" event="Generic.Client.Login.Result">
+                <script>Generic.Client.Login.Result</script>
+            </transition>
+            <transition type="internal" event="VuetifyKits.Layout">
+                <script>VuetifyKits.Layout</script>
+            </transition>
+            <transition type="internal" event="VuetifyKits.PartialLayout">
+                <script>VuetifyKits.PartialLayout</script>
+            </transition>
+            <transition type="internal" event="Generic.Client.ConfigComplete">
+                <script>Generic.Client.ConfigComplete</script>
+            </transition>
+            <transition type="internal" event="Generic.Client.ExitApp">
+                <script>Generic.Client.ExitApp</script>
+            </transition>
+            <transition type="internal" event="Generic.Client.Logout">
+                <script>Generic.Client.Logout</script>
+            </transition>
+            <transition type="internal" event="Generic.Client.ShowMessage">
+                <script>Generic.Client.ShowMessage</script>
+            </transition>
+            <transition type="internal" event="Generic.Client.Redirect">
+                <script>Generic.Client.Redirect</script>
+            </transition>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+    </state>
+</scxml>

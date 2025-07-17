@@ -1,0 +1,90 @@
+{
+  "background": {
+    "style": "background-size:contain;margin:auto;max-width:1080px;background-color:white;"
+  },
+  "layout": [
+    {
+      "component": "Container",
+      "subcomponent": "div",
+      "id": "app_registration",
+      "style": "margin:60px 3% 0px 3%;background-color:transparent;border-color:transparent;display:flow-root;",
+      "items": [
+        {
+          "component": "div",
+          "content": "::Learning.Language[::Language][title_register]",
+          "id": "app_registration_title",
+          "style": "text-align:center;font-size:xx-large;"
+        },
+        {
+          "id": "app_registration_account",
+          "component": "v-text-field",
+          "style": "margin:30px 10% 0px;height:3em;",
+          "label": "::Learning.Language[::Language][title_account]"
+        },
+        {
+          "id": "app_registration_password1",
+          "component": "v-text-field",
+          "label": "::Learning.Language[::Language][title_password]",
+          "style": "margin:30px 10% 0px;",
+          "type": "password"
+        },
+        {
+          "id": "app_registration_password2",
+          "component": "v-text-field",
+          "label": "::Learning.Language[::Language][title_password2]",
+          "style": "margin:30px 10% 0px;",
+          "type": "password"
+        },
+        {
+          "component": "v-text-field",
+          "id": "app_registration_userName",
+          "label": "::Learning.Language[::Language][title_userName](15::Learning.Language[::Language][words_limit])",
+          "style": "margin:30px 10% 0px;"
+        },
+        {
+          "component": "Section",
+          "subcomponent": "div",
+          "id": "app_registration_functions",
+          "items": [
+            {
+              "color": "primary",
+              "component": "v-btn",
+              "content": "::Learning.Language[::Language][commit]",
+              "id": "app_registration_commit",
+              "style": "margin:30px 30% 20px;float:left;inline-size:40%;"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "class": "btn-home",
+      "color": "gray",
+      "component": "v-btn",
+      "content": "::Learning.Language[::Language][go_back]",
+      "description": "Home",
+      "id": "go_back"
+    },
+    {
+      "component": "Footer",
+      "id": "main-footer",
+      "description": "Footer",
+      "content": "::Learning.Language[::Language][system_fullname]"
+    },
+    {
+      "class": "list-menu-title",
+      "component": "OK",
+      "content": "{\"question\":\"\", \"ok\":\"::Learning.Language[::Language][close]\"}",
+      "id": "app_dialog_messagebox",
+      "invisible": "true",
+      "style": "text-align:center;"
+    }
+  ],
+  "methodList": [
+    {
+      "component": "Section",
+      "functionName": "handleClick",
+      "functionValue": "../Account/js/Section_handleClick.js"
+    }
+  ]
+}

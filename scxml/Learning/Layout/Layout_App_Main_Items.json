@@ -1,0 +1,48 @@
+{
+  "app_exit_app": [
+    {
+      "id": "app_exit_app_label",
+      "component": "div",
+      "content": "::Learning.Language[::Language][title_exit_app]",
+      "class": "cardlist-menu",
+      "style": "font-size:x-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "id": "app_exit_app_confirm",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "float:left;margin:40px 0% 30px 25%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][yes]"
+    },
+    {
+      "id": "go_back",
+      "component": "v-btn",
+      "color": "gray",
+      "style": "margin:40px 20% 30px 10%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][no]"
+    }
+  ],
+  "app_home_logout": [
+    {
+      "id": "app_exit_app_label",
+      "component": "div",
+      "content": "::Learning.Language[::Language][app_home_logout]",
+      "class": "cardlist-menu",
+      "style": "font-size:x-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "id": "app_exit_app_confirm",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "float:left;margin:40px 0% 30px 25%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][yes]"
+    },
+    {
+      "id": "go_back",
+      "component": "v-btn",
+      "color": "gray",
+      "style": "margin:40px 20% 30px 10%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][no]"
+    }
+  ]
+}

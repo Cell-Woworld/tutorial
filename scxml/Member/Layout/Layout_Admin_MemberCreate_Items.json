@@ -1,0 +1,80 @@
+{
+  "createMemberLayout": [
+    {
+      "id": "admin_member_create_title",
+      "component": "div",
+      "content": "::Learning.Language[::Language][Tab_Member]",
+      "class": "cardlist-menu",
+      "style": "font-size:xx-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "id": "admin_member_create_userName",
+      "component": "v-text-field",
+      "style": "padding:30px 10% 0px;",
+      "value": "::Learning.UpdateMemberView.userName",
+      "label": "::Learning.Language[::Language][title_userName]"
+    },
+    {
+      "id": "admin_member_create_account",
+      "component": "v-text-field",
+      "style": "padding:30px 10% 0px;",
+      "value": "::Learning.UpdateMemberView.account",
+      "label": "::Learning.Language[::Language][title_account]"
+    },
+    {
+      "id": "admin_member_create_effectiveDate",
+      "component": "DatePicker",
+      "style": "padding:30px 10% 0px;",
+      "value": "::('::Learning.UpdateMemberView.effectiveDate'=='1980-01-01'?'0':'::Learning.UpdateMemberView.effectiveDate')",
+      "label": "::Learning.Language[::Language][admin_member_effectiveDate]"
+    },
+    {
+      "id": "admin_member_create_expiredDate",
+      "component": "DatePicker",
+      "style": "padding:30px 10% 0px;",
+      "value": "::Learning.UpdateMemberView.expiredDate",
+      "label": "::Learning.Language[::Language][admin_member_expiredDate]"
+    },
+    {
+      "id": "admin_member_create_isAvailable",
+      "component": "v-select",
+      "style": "padding:30px 10% 0px;",
+      "value": "::Learning.UpdateMemberView.authority",
+      "label": "::Learning.Language[::Language][app_member_authority]",
+      "items": [
+        { "text":"::Learning.Language[::Language][admin_member_::Learning.Account.const[AUTHORITY_NAME][::Learning.Account.const[AUTHORITY_INDEX][Invalid]]]", "value": "::Learning.Account.const[AUTHORITY_INDEX][Invalid]" },
+        { "text":"::Learning.Language[::Language][admin_member_::Learning.Account.const[AUTHORITY_NAME][::Learning.Account.const[AUTHORITY_INDEX][AppUser]]]", "value": "::Learning.Account.const[AUTHORITY_INDEX][AppUser]" }
+      ]
+    },
+    {
+      "id": "admin_member_create_confirm",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "float:left;margin:60px 0% 30px 25%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][confirm]"
+    },
+    {
+      "id": "admin_member_create_cancel",
+      "component": "v-btn",
+      "color": "gray",
+      "style": "margin:60px 20% 30px 10%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][cancel]"
+    }
+  ],
+  "createMemberLayoutErrorMsg": [
+    {
+      "id": "admin_member_create_error",
+      "component": "div",
+      "content": "::Learning.Language[::Language][error_admin_maintain_member_create]",
+      "class": "cardlist-menu",
+      "style": "font-size:x-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "id": "admin_member_create_error_close",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "margin:60px 40% 30px;inline-size:20%;",
+      "content": "::Learning.Language[::Language][close]"
+    }
+  ]
+}

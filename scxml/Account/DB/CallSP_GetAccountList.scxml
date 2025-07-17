@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_GetAccountList" qt:editorversion="4.13.1">
+    <state id="CallSP_GetAccountList">
+        <qt:editorinfo scenegeometry="254.47;376.16;-110.13;8.66;721.86;640.62" geometry="254.47;376.16;-364.60;-367.50;721.86;640.62"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="GetAccountList.Standby">
+            <qt:editorinfo scenegeometry="275.14;394.69;-90.13;94.26;677.30;386.90" geometry="20.67;18.53;-365.27;-300.43;677.30;386.90"/>
+            <transition type="external" event="Database.Error.Account.GetAccountList" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="50.39;95.43"/>
+            </transition>
+            <state id="GetAccountList.Standby">
+                <qt:editorinfo scenegeometry="402.35;207.47;221.22;157.47;196;100" geometry="127.21;-187.22;-181.13;-50;196;100"/>
+                <transition type="external" event="Account.GetAccountList" target="GetAccountList.Running" cond="::Database.CallSP.gateOpen">
+                    <assign location="Database.CallSP.gateOpen" expr="false"/>
+                </transition>
+            </state>
+            <state id="GetAccountList.Running">
+                <qt:editorinfo scenegeometry="296.72;384.71;101.87;278.70;436.23;181.44" geometry="21.58;-9.98;-194.85;-106.01;436.23;181.44"/>
+                <state id="Preparing">
+                    <qt:editorinfo scenegeometry="258.87;384.70;121.87;334.70;167;100" geometry="-37.85;-0.01;-137;-50;167;100"/>
+                    <onentry>
+                        <send event="CheckUserId"/>
+                        <send event="Prepared"/>
+                    </onentry>
+                    <transition type="internal" event="CheckUserId" cond="::Account.GetAccountList.userId=&quot;&quot;">
+                        <assign location="Account.GetAccountList.userId" expr="null"/>
+                    </transition>
+                    <transition type="external" event="Prepared" target="CallStoredProcedure"/>
+                </state>
+                <state id="CallStoredProcedure">
+                    <qt:editorinfo scenegeometry="432.60;385.02;347.10;335.02;171;100" geometry="135.88;0.31;-85.50;-50;171;100"/>
+                    <onentry>
+                        <send event="Database.CallStoredProc">
+                            <param name="show_result" expr="false"/>
+                            <param name="name" expr="PROJECT_NAME.GetAccountList"/>
+                            <param name="callback_message" expr="Account.GetAccountList.Result"/>
+                            <param name="done_message" expr="Database.Task.Done.Account.GetAccountList"/>
+                            <param name="err_message" expr="Database.Error.Account.GetAccountList"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="Database.Task.Done.Account.GetAccountList" target="CallSP">
+                        <qt:editorinfo endTargetFactors="98.41;73.55"/>
+                    </transition>
+                </state>
+                <onexit>
+                    <assign location="Database.CallSP.gateOpen" expr="true"/>
+                </onexit>
+            </state>
+            <transition type="internal" event="Account.GetAccountList">
+                <assign location="Database.WaitForCall.name" expr="Account.GetAccountList"/>
+                <raise event="Database.WaitForCall"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="40.82;563.13;-42.18;513.13;120;100" geometry="-213.65;186.97;-83;-50;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="250.80;699.24;230.80;679.24;40;40" geometry="250.80;699.24;-20;-20;40;40"/>
+    </final>
+</scxml>

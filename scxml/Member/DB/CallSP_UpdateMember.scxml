@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_UpdateMember" qt:editorversion="4.13.2">
+    <state id="CallSP_UpdateMember">
+        <qt:editorinfo scenegeometry="272.82;385.77;-29.14;22.28;547.89;774.91" geometry="272.82;385.77;-301.96;-363.49;547.89;774.91"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="257.33;428.80;2.99;138.45;491.50;547.67" geometry="-26.05;15.59;-254.34;-290.35;491.50;547.67"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.UpdateMember" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="52.58;97.43"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="374.41;257.09;231.28;207.09;120;100" geometry="161.41;-167.49;-143.13;-50;120;100"/>
+                <transition type="internal" event="PROJECT_NAME.UpdateMember" target="UpdateMember.Running" cond="::Database.CallSP.gateOpen">
+                    <assign location="Database.CallSP.gateOpen" expr="false"/>
+                </transition>
+            </state>
+            <state id="UpdateMember.Running" initial="AssignParameters">
+                <qt:editorinfo scenegeometry="217.22;453.08;149.66;339.05;280;322.85" geometry="4.22;28.50;-67.56;-114.03;280;322.85"/>
+                <state id="CallStoredProcedure">
+                    <qt:editorinfo scenegeometry="286;591.90;200.50;541.90;171;100" geometry="68.78;138.82;-85.50;-50;171;100"/>
+                    <onentry>
+                        <send event="Database.CallStoredProc">
+                            <param name="show_result" expr="true"/>
+                            <param name="name" expr="PROJECT_NAME.UpdateMember"/>
+                            <param name="done_message" expr="Database.Task.Done.PROJECT_NAME.UpdateMember"/>
+                            <param name="err_message" expr="Database.Error.PROJECT_NAME.UpdateMember"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="Database.Task.Done.PROJECT_NAME.UpdateMember" target="CallSP">
+                        <qt:editorinfo endTargetFactors="95.71;84.54"/>
+                    </transition>
+                </state>
+                <state id="AssignParameters">
+                    <qt:editorinfo scenegeometry="286;449.35;209;399.35;154;100" geometry="68.78;-3.73;-77;-50;154;100"/>
+                    <onentry>
+                        <assign location="PROJECT_NAME.User.*" expr="::PROJECT_NAME.UpdateMember.*"/>
+                        <if cond="::PROJECT_NAME.UpdateMember.invitedBy=''">
+                            <assign location="PROJECT_NAME.User.invitedBy" expr="null"/>
+                        </if>
+                    </onentry>
+                    <transition type="external" target="CallStoredProcedure"/>
+                </state>
+                <onexit>
+                    <assign location="Database.CallSP.gateOpen" expr="true"/>
+                    <assign location="PROJECT_NAME.User.*"/>
+                </onexit>
+            </state>
+            <transition type="internal" event="PROJECT_NAME.UpdateMember">
+                <assign location="Database.WaitForCall.name" expr="PROJECT_NAME.UpdateMember"/>
+                <raise event="Database.WaitForCall"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="100.25;752.52;17.25;702.52;120;100" geometry="-183.13;339.31;-83;-50;120;100"/>
+            <transition type="external" target="Final_1">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="244.81;847.97;224.81;827.97;40;40" geometry="244.81;847.97;-20;-20;40;40"/>
+    </final>
+</scxml>

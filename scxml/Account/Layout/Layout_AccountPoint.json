@@ -1,0 +1,127 @@
+{
+  "layout": [
+    {
+      "id": "app_point_container",
+      "component": "Section",
+      "subcomponent": "div",
+      "style": "margin:20px 3% 0px;max-width:94%;max-height:80vh;min-height:80vh;height:80vh;overflow:auto;",
+      "items": [
+        {
+          "component": "div",
+          "content": "::Learning.Language[::Language][title_point]",
+          "id": "app_point_title",
+          "style": "margin:50px 5% 10px;font-size:xx-large;text-align:center;"
+        },
+        {
+          "component": "div",
+          "content": "::Learning.Language[::Language][app_point_current]: ::(::Learning.Account.deposit - ::Learning.Account.redeem)",
+          "id": "app_point_current",
+          "style": "padding:10px 3%;font-size:medium;float:right;color:darkred;"
+        },
+        {
+          "id": "app_point_information_icon",
+          "component": "v-icon",
+          "content": "mdi-clipboard-list-outline",
+          "style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+        },
+        {
+          "component": "div",
+          "id": "app_point_information_label",
+          "style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+          "content": "::Learning.Language[::Language][app_accountPoint_subject]"
+        },
+        {
+          "id": "app_point_information",
+          "component": "v-icon",
+          "content": "mdi-chevron-right",
+          "style": "margin:35px 5% 10px 0px;float:right;"
+        },
+        {
+          "component": "v-divider",
+          "id": "app_function_divider1",
+          "style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+        },
+        {
+          "id": "app_point_deposit_icon",
+          "component": "v-icon",
+          "content": "mdi-ev-station",
+          "style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+        },
+        {
+          "component": "div",
+          "id": "app_point_deposit_label",
+          "style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+          "content": "::Learning.Language[::Language][app_point_deposit]"
+        },
+        {
+          "id": "app_point_deposit",
+          "component": "v-icon",
+          "content": "mdi-chevron-right",
+          "style": "margin:35px 5% 10px 0px;float:right;"
+        },
+        {
+          "component": "v-divider",
+          "id": "app_function_divider2",
+          "style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+        },
+        {
+          "id": "app_point_transfer_icon",
+          "component": "v-icon",
+          "content": "mdi-transfer",
+          "invisible": "true",
+          "style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+        },
+        {
+          "component": "div",
+          "id": "app_point_transfer_label",
+          "style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+          "invisible": "true",
+          "content": "::Learning.Language[::Language][app_point_transfer]"
+        },
+        {
+          "id": "app_point_transfer",
+          "component": "v-icon",
+          "content": "mdi-chevron-right",
+          "invisible": "true",
+          "style": "margin:35px 5% 10px 0px;float:right;"
+        },
+        {
+          "component": "v-divider",
+          "id": "app_function_divider3",
+          "invisible": "true",
+          "style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+        },
+        {
+          "id": "app_point_history_icon",
+          "component": "v-icon",
+          "content": "mdi-history",
+          "style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+        },
+        {
+          "component": "div",
+          "id": "app_point_history_label",
+          "style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+          "content": "::Learning.Language[::Language][app_point_history]"
+        },
+        {
+          "id": "app_point_history",
+          "component": "v-icon",
+          "content": "mdi-chevron-right",
+          "style": "margin:35px 5% 10px 0px;float:right;"
+        },
+        {
+          "component": "v-divider",
+          "id": "app_function_divider4",
+          "style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+        }
+      ]
+    },
+    {
+      "id": "go_back",
+      "component": "v-icon",
+      "content": "mdi-chevron-left",
+      "style":"position:absolute;top:0vh;left:0%;margin:5px 0px;font-size:6vh;text-align:left;color:lightsteelblue;"
+    }
+  ],
+  "methodList": []
+}

@@ -1,0 +1,25 @@
+#!/bin/bash
+cd "$(dirname "$0")"
+sleep 10
+
+#timeout 300 bash -c 'until printf "" 2>>/dev/null >>/dev/tcp/$0/$1; do sleep 5; done' mysql 3306
+timeout 300 bash -c 'until printf "" >>/dev/tcp/$0/$1; do sleep 5; done' mysql 3306
+
+if [ "$1" = "" ]
+then
+  #dir_name="${PWD##*/}"
+  dir_name="$(basename $(dirname $PWD))"
+  export LD_LIBRARY_PATH=/root/$dir_name/bin
+  #gdb --args ./ConsoleApp scxml/$dir_name/$dir_name.scxml
+  ./ConsoleApp scxml/$dir_name/$dir_name.scxml
+elif [ "$2" = "" ]
+then
+  export LD_LIBRARY_PATH=/root/$1/bin
+  # gdb --args ./ConsoleApp scxml/$1/$1.scxml
+  ./ConsoleApp scxml/$1/$1.scxml
+else
+  export LD_LIBRARY_PATH=/root/$1/bin
+  #gdb --args ./ConsoleApp scxml/$1/$1.scxml
+  ./ConsoleApp scxml/$2/$2.scxml
+fi
+

@@ -1,0 +1,50 @@
+syntax = "proto3";
+package Learning.Client;
+
+message NewExample
+{
+  string exampleName 	= 1;
+  repeated string userIdList 			= 2;
+  string startTime 	= 3;
+  string endTime 		= 4;
+  string content 		= 5;
+  string location 	= 6;
+}
+
+message UpdateExample
+{
+  string exampleName 	= 1;
+  repeated string userIdList 			= 2;
+  string startTime 	= 3;
+  string endTime 		= 4;
+  string content 		= 5;
+  string location 	= 6;
+  int32 isAvailable = 7;
+}
+
+message GetExampleList
+{
+  string startTime  = 1;
+  string endTime    = 2;
+}
+
+message UploadFiles
+{
+  message FileInfo
+  {
+    string ownerId 	= 1;
+    string type 		= 2;
+    bytes data 			= 3;
+  }
+  repeated FileInfo fileList = 1;
+}
+
+message UpdatePostList
+{
+  message PostInfo
+  {
+    string postId = 1;
+    string content = 2;
+  }
+  repeated PostInfo list = 1;
+}

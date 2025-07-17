@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_Login" qt:editorversion="4.11.1">
+    <state id="CallSP_Login">
+        <qt:editorinfo geometry="203.37;333;-162.71;-308.35;418.37;578.97" scenegeometry="203.37;333;40.66;24.65;418.37;578.97"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo geometry="-36.62;11.37;-106.09;-244.98;376.25;349.29" scenegeometry="261.94;364.84;155.85;119.86;376.25;349.29"/>
+            <transition type="external" event="Database.Error.Account.Login" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_CallSP_Login">
+                <qt:editorinfo startTargetFactors="51.79;96.67"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo geometry="177.79;-130.95;-143.13;-50;120;100" scenegeometry="439.73;233.89;296.60;183.89;120;100"/>
+                <transition type="internal" event="Account.Login" target="CallStoredProcedure"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo geometry="172.60;7.67;-167.44;-50;171;100" scenegeometry="434.54;372.51;267.10;322.51;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.Login"/>
+                        <param name="callback_message" expr="Account.Login.Result"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.Login"/>
+                        <param name="err_message" expr="Database.Error.Account.Login"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Account.Login" target="CallSP">
+                    <qt:editorinfo endTargetFactors="96.50;71.77"/>
+                    <send event="Account.Login.Result">
+                        <param name="userId" expr="&quot;&quot;"/>
+                        <param name="deviceId" expr="::Account.Login.deviceId"/>
+                    </send>
+                    <log label="test" expr="test2, ::Account.Login.RowCount, ::Account.Login.ColumnCount"/>
+                </transition>
+                <transition type="external" event="Database.Task.Done.Account.Login" target="CallSP" cond="::Account.Login.RowCount &gt; 0">
+                    <qt:editorinfo endTargetFactors="4.04;70.49"/>
+                    <log label="test" expr="test1"/>
+                </transition>
+                <transition type="external" event="Database.Task.Done.Account.Login" target="CallSP" cond="::Account.Login.deviceId = &quot;null&quot;">
+                    <qt:editorinfo endTargetFactors="52.30;95.85"/>
+                    <send event="Account.Login.Result">
+                        <param name="userId" expr="&quot;&quot;"/>
+                        <param name="deviceId" expr="&quot;&quot;"/>
+                    </send>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="-46.67;192.20;-83;-50;120;100" scenegeometry="251.89;545.67;168.89;495.67;120;100"/>
+            <transition type="external" target="Final_CallSP_Login"/>
+        </state>
+    </state>
+    <final id="Final_CallSP_Login">
+        <qt:editorinfo geometry="259.09;635.08;-20;-20;40;40" scenegeometry="259.09;635.08;239.09;615.08;40;40"/>
+    </final>
+</scxml>

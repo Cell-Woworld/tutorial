@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_UpdateExample" qt:editorversion="4.11.1">
+    <state id="CallSP_UpdateExample">
+        <qt:editorinfo geometry="225.30;426.85;-8.96;-447.64;785.68;647.45" scenegeometry="225.30;426.85;216.34;-20.79;785.68;647.45"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo geometry="-36.62;13.53;47.79;-382.32;745.55;416.44" scenegeometry="188.68;440.38;236.47;58.06;745.55;416.44"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.UpdateExample" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="50.53;97.34"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo geometry="229.04;-137.44;-143.13;-50;120;100" scenegeometry="417.72;302.94;274.59;252.94;120;100"/>
+                <transition type="internal" event="PROJECT_NAME.UpdateExample" target="Prepare"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo geometry="640.48;-45.59;-85.50;-50;171;100" scenegeometry="829.16;394.79;743.66;344.79;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.UpdateExample"/>
+                        <param name="done_message" expr="Database.Task.Done.PROJECT_NAME.UpdateExample"/>
+                        <param name="err_message" expr="Database.Error.PROJECT_NAME.UpdateExample"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.PROJECT_NAME.UpdateExample" target="CallSP">
+                    <qt:editorinfo endTargetFactors="97.62;79.71"/>
+                </transition>
+            </state>
+            <state id="AddUserList" initial="UserList.CheckLength">
+                <qt:editorinfo geometry="502.95;-96.55;-245.25;-216.72;515.64;179.29" scenegeometry="691.63;343.83;446.38;127.11;515.64;179.29"/>
+                <state id="UserList.AssignParameters">
+                    <qt:editorinfo geometry="136.89;-115.96;-113.50;-50;227;100" scenegeometry="828.52;227.87;715.02;177.87;227;100"/>
+                    <onentry>
+                        <assign location="PROJECT_NAME.Example.UserIdList[]" expr="{&quot;exampleId&quot;:&quot;::PROJECT_NAME.Example.exampleId&quot;,&quot;userId&quot;:&quot;::PROJECT_NAME.UpdateExample.userIdList[::index]&quot;}"/>
+                        <assign location="index" expr="::index+1">
+                            <qt:editorinfo geometry="147.57;73.88;0;0;0;0"/>
+                        </assign>
+                        <send event="Next">
+                            <qt:editorinfo geometry="177.57;103.88;0;0;0;0"/>
+                        </send>
+                    </onentry>
+                    <transition type="internal" event="Next" cond="::index &lt; ::PROJECT_NAME.UpdateExample.userIdList[].length">
+                        <assign location="PROJECT_NAME.Example.UserIdList[]" expr="{&quot;exampleId&quot;:&quot;::PROJECT_NAME.Example.exampleId&quot;,&quot;userId&quot;:&quot;::PROJECT_NAME.UpdateExample.userIdList[::index]&quot;}">
+                            <qt:editorinfo geometry="-14.07;-94.21;0;0;0;0"/>
+                        </assign>
+                        <assign location="index" expr="::index+1"/>
+                        <send event="Next">
+                            <qt:editorinfo geometry="57.57;258.67;0;0;0;0"/>
+                        </send>
+                    </transition>
+                    <transition type="external" event="Next" target="CallStoredProcedure">
+                        <assign location="PROJECT_NAME.Example.UserIdList" expr="&quot;::PROJECT_NAME.Example.UserIdList&quot;">
+                            <qt:editorinfo geometry="-32.43;-106.12;0;0;0;0"/>
+                        </assign>
+                    </transition>
+                </state>
+                <state id="UserList.CheckLength">
+                    <qt:editorinfo geometry="-124.47;-114.82;-100;-50;200;100" scenegeometry="567.16;229.01;467.16;179.01;200;100"/>
+                    <transition type="external" target="UserList.AssignParameters" cond="::PROJECT_NAME.UpdateExample.userIdList[].length&gt;0"/>
+                    <transition type="external" target="CallStoredProcedure">
+                        <assign location="PROJECT_NAME.Example.UserIdList" expr="&quot;::PROJECT_NAME.Example.UserIdList&quot;"/>
+                    </transition>
+                </state>
+                <onentry>
+                    <assign location="PROJECT_NAME.Example.UserIdList" expr="[]">
+                        <qt:editorinfo geometry="-92.43;-166.12;0;0;0;0"/>
+                    </assign>
+                    <assign location="index" expr="0">
+                        <qt:editorinfo geometry="-62.43;-136.12;0;0;0;0"/>
+                    </assign>
+                </onentry>
+            </state>
+            <state id="Prepare">
+                <qt:editorinfo geometry="394.65;-40.19;-77;-50;154;100" scenegeometry="583.33;400.19;506.33;350.19;154;100"/>
+                <onentry>
+                    <assign location="PROJECT_NAME.Example.*" expr="::PROJECT_NAME.UpdateExample.*"/>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" target="AddUserList" event="Prepared">
+                    <qt:editorinfo endTargetFactors="26.01;90.04" movePoint="-1.21;0"/>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="215.26;129.44;-83;-50;120;100" scenegeometry="440.56;556.29;357.56;506.29;120;100"/>
+            <transition type="external" target="Final_1">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="608.72;664.57;-20;-20;40;40" scenegeometry="608.72;664.57;588.72;644.57;40;40"/>
+    </final>
+</scxml>

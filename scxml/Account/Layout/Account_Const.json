@@ -1,0 +1,16 @@
+{
+	"AUTHORITY_NAME": [
+		"Invalid",
+		"AppUser",
+		"MaxApp",
+		"BackendUser",
+		"BackendAdmin"
+	],
+	"AUTHORITY_INDEX": {
+		"Invalid": 0,
+		"AppUser": 1,
+		"MaxApp": 2,
+		"BackendUser": 3,
+		"BackendAdmin": 4
+	}
+}

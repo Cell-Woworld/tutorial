@@ -1,0 +1,23 @@
+syntax = "proto3";
+package Web;
+
+message WebEvent
+{
+	string name = 1;
+	bytes payload = 2;
+}
+
+message AddProto
+{
+	bytes content = 1;
+}
+
+message AddJS
+{
+	bytes content = 1;
+}
+
+message RunJS
+{
+	bytes content = 1;			// content: must be valid Javascript
+}

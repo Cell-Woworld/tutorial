@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_GetAccountList" qt:editorversion="4.13.1">
+    <state id="BuildSP_GetAccountList">
+        <qt:editorinfo scenegeometry="407.50;353.22;60.86;26.83;693.18;761.32" geometry="407.50;353.22;-346.64;-326.39;693.18;761.32"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo scenegeometry="393.85;344.46;123.92;136.80;610.12;510.11" geometry="-13.65;-8.76;-269.93;-207.66;610.12;510.11"/>
+            <transition type="internal" event="AND">
+                <send event="OR"/>
+            </transition>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="50.61;96.06"/>
+            </transition>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Setup">
+                <qt:editorinfo scenegeometry="318.62;275.05;258.62;225.05;120;100" geometry="-75.23;-69.41;-60;-50;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Preparing"/>
+                <onentry>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Query">
+                <qt:editorinfo scenegeometry="667.11;267.71;572.61;226.16;120;100" geometry="273.26;-76.75;-94.50;-41.55;120;100"/>
+                <onentry>
+                    <send event="Database.Query">
+                        <param name="model_list" expr="[::PROJECT_NAME.BuildSP_GetAccountList.OutUserId,PROJECT_NAME.User.account,PROJECT_NAME.User.userName,PROJECT_NAME.User.email,PROJECT_NAME.User.authority]"/>
+                    </send>
+                    <send event="StartAddCond"/>
+                </onentry>
+                <transition type="external" event="StartAddCond" target="UserId">
+                    <qt:editorinfo endTargetFactors="90.83;31.31"/>
+                </transition>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo scenegeometry="621.04;567.37;528.04;517.37;186;100" geometry="227.19;222.91;-93;-50;186;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.GetAccountList"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.GetAccountList"/>
+                        <param name="err_message" expr="Database.Error.Account.GetAccountList"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Account.GetAccountList" target="Final_1"/>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="474.96;276.21;414.96;226.21;120;100" geometry="81.11;-68.25;-60;-50;120;100"/>
+                <transition type="external" event="Prepared" target="Query"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param name="name" expr="UUID_TO_BIN"/>
+                        <param name="parameters" expr="[::Account.GetAccountList.userId]"/>
+                        <param name="alias" expr="InUserId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param name="name" expr="BIN_TO_UUID"/>
+                        <param name="parameters" expr="[PROJECT_NAME.User.userId]"/>
+                        <param name="alias" expr="OutUserId"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+            </state>
+            <state id="UserId">
+                <qt:editorinfo scenegeometry="390.91;486.11;262.61;330.50;225.23;296.41" geometry="-2.94;141.65;-128.30;-155.61;225.23;296.41"/>
+                <state id="DontCare_UserId">
+                    <qt:editorinfo scenegeometry="375.84;438.28;283.84;388.28;184;100" geometry="-15.07;-47.83;-92;-50;184;100"/>
+                    <transition type="external" event="OR" target="Check_UserId"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::Account.GetAccountList.userId"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="null"/>
+                        </send>
+                    </onentry>
+                </state>
+                <state id="Check_UserId">
+                    <qt:editorinfo scenegeometry="374.40;556.91;292.40;506.91;164;100" geometry="-16.51;70.80;-82;-50;164;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.userId"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::PROJECT_NAME.BuildSP_GetAccountList.InUserId"/>
+                        </send>
+                        <send event="StartBuild"/>
+                    </onentry>
+                    <transition type="external" event="StartBuild" target="CreateStoredProcedure"/>
+                </state>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="234.05;718.15;151.05;668.15;120;100" geometry="-173.45;364.93;-83;-50;120;100"/>
+            <transition type="external" target="Final_1">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="437.64;873.39;417.64;853.39;40;40" geometry="437.64;873.39;-20;-20;40;40"/>
+    </final>
+</scxml>

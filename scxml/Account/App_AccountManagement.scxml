@@ -1,0 +1,267 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CardList" qt:editorversion="7.0.0">
+    <state id="Account">
+        <qt:editorinfo geometry="490.26;-671.84;-751.81;635.89;1319.59;1195.61" scenegeometry="490.26;-671.84;-261.55;-35.95;1319.59;1195.61"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="Account.LoadFileIO">
+            <qt:editorinfo geometry="-80.41;803.55;-85.50;-50;171;100" scenegeometry="409.85;131.71;324.35;81.71;171;100"/>
+            <onentry>
+                <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;../FileIO/FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Account.Running" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <state id="Account.Running">
+            <qt:editorinfo geometry="121.93;1334.80;-853.74;-460.36;1279.49;937.06" scenegeometry="612.19;662.96;-241.55;202.60;1279.49;937.06"/>
+            <invoke id="UpdateAccount" src="./DB/CallSP_UpdateAccount.scxml"/>
+            <onentry>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Account.proto&quot;})</script>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Account_client.proto&quot;})</script>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;../Point/Point.proto&quot;})</script>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;../Point/Point_client.proto&quot;})</script>
+            </onentry>
+            <transition type="internal" event="ShowUI">
+                <assign location="PROJECT_NAME.LayoutTemplate.appMainRoot" expr="::PROJECT_NAME.LayoutTemplate.content[layout]"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.methodList" expr="::PROJECT_NAME.LayoutTemplate.content[methodList]"/>
+                <send event="VuetifyKits.Send">
+                    <param name="view" expr="::PROJECT_NAME.LayoutTemplate.layout"/>
+                </send>
+                <log label="Account.ShowUI" expr="view = ::PROJECT_NAME.LayoutTemplate.layout"/>
+            </transition>
+            <state id="Account.MaintainMenu">
+                <qt:editorinfo geometry="-342.40;78;-205.72;-46.03;225.72;100.47" scenegeometry="269.79;740.96;64.07;694.93;225.72;100.47"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_App_Account.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_AccountItems.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.helper&quot;})</script>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.Point" cond="::Generic.Client.Clicked.id=&quot;app_account_point_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_account_point_label&quot; || ::Generic.Client.Clicked.id=&quot;app_account_point&quot;">
+                    <qt:editorinfo endTargetFactors="44.49;21.47" startTargetFactors="31.51;70"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <send event="PROJECT_NAME.Account.Finished"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.InfoMenu" cond="::Generic.Client.Clicked.id=&quot;app_account_profile_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_account_profile_label&quot; || ::Generic.Client.Clicked.id=&quot;app_account_profile&quot;"/>
+            </state>
+            <state id="Account.InfoMenu">
+                <qt:editorinfo geometry="69.72;-28.03;-257;1.75;184;100" scenegeometry="681.91;634.93;424.91;636.68;184;100"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_AccountMenu.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.ProducerProfile" cond="::Generic.Client.Clicked.id=&quot;app_account_producer_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_account_producer_label&quot; || ::Generic.Client.Clicked.id=&quot;app_account_producer&quot;">
+                    <qt:editorinfo endTargetFactors="72.23;88.36" startTargetFactors="11.38;30.02"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.ProviderProfile" cond="::Generic.Client.Clicked.id=&quot;app_account_provider_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_account_provider_label&quot; || ::Generic.Client.Clicked.id=&quot;app_account_provider&quot;">
+                    <qt:editorinfo endTargetFactors="51.80;71.44" startTargetFactors="11.38;30.02"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.ChangePassword" cond="::Generic.Client.Clicked.id=&quot;app_account_change_password_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_account_change_password_label&quot; || ::Generic.Client.Clicked.id=&quot;app_account_change_password&quot;">
+                    <qt:editorinfo endTargetFactors="5.31;23.29"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.MaintainMenu" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <qt:editorinfo endTargetFactors="90.60;67.62"/>
+                </transition>
+            </state>
+            <state id="Account.ProducerProfile">
+                <qt:editorinfo geometry="-306.74;-199.95;-426;-52.75;446.50;212.50" scenegeometry="305.45;463.01;-120.55;410.26;446.50;212.50"/>
+                <invoke src="../Account/DB/CallSP_GetExpertiseCategoryList.scxml" id="GetExpertiseCategoryList"/>
+                <invoke src="../Account/DB/CallSP_GetDeveloperExpertiseList.scxml" id="GetDeveloperExpertiseList"/>
+                <invoke src="../Account/DB/CallSP_GetUserExpertiseList.scxml" id="GetUserExpertiseList"/>
+                <invoke src="../Account/DB/CallSP_UpdateUserExpertise.scxml" id="UpdateUserExpertise"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_ProducerProfile.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <assign location="PROJECT_NAME.AccountView.categoryMap" expr="{}"/>
+                    <assign location="PROJECT_NAME.AccountView.expertiseList" expr="{}"/>
+                    <assign location="PROJECT_NAME.AccountView.expertiseMap" expr="{}"/>
+                    <send event="Account.GetExpertiseCategoryList">
+                        <param name="isAvailableOnly" expr="true"/>
+                    </send>
+                    <send event="Account.GetDeveloperExpertiseList">
+                        <param name="isAvailableOnly" expr="true"/>
+                    </send>
+                    <send event="Account.GetUserExpertiseList">
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="isAvailableOnly" expr="true"/>
+                    </send>
+                </onentry>
+                <transition type="internal" event="Account.GetExpertiseCategoryList.Result">
+                    <assign location="PROJECT_NAME.AccountView.categoryMap{}" expr="::PROJECT_NAME.LayoutTemplate.helper[category_map_item]"/>
+                </transition>
+                <transition type="internal" event="Account.GetDeveloperExpertiseList.Result">
+                    <assign location="PROJECT_NAME.AccountView.expertiseMap{}" expr="::PROJECT_NAME.LayoutTemplate.helper[expertise_map_item]"/>
+                    <if cond="::PROJECT_NAME.AccountView.expertiseList[::Account.GetDeveloperExpertiseList.Result.categoryId][].length=0">
+                        <assign location="PROJECT_NAME.AccountView.expertiseList[::Account.GetDeveloperExpertiseList.Result.categoryId]" expr="[::PROJECT_NAME.LayoutTemplate.helper[expertise_list_item]]"/>
+                        <else/>
+                        <assign location="PROJECT_NAME.AccountView.expertiseList[::Account.GetDeveloperExpertiseList.Result.categoryId][]" expr="::PROJECT_NAME.LayoutTemplate.helper[expertise_list_item]"/>
+                    </if>
+                </transition>
+                <transition type="internal" event="Account.GetUserExpertiseList.Result">
+                    <assign location="PROJECT_NAME.AccountView.expertiseList[::Account.GetUserExpertiseList.Result.categoryId][::PROJECT_NAME.AccountView.expertiseMap[::Account.GetUserExpertiseList.Result.expertiseId][index]][value]" expr="true"/>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.GetUserExpertiseList">
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Account.Client.UpdateAccount" cond="::Account.Client.UpdateAccount.userName≠&quot;&quot;">
+                    <assign location="PROJECT_NAME.Account.userName" expr="::Account.Client.UpdateAccount.userName"/>
+                    <assign location="PROJECT_NAME.Account.email" expr="::Account.Client.UpdateAccount.email"/>
+                    <send event="Account.UpdateAccount">
+                        <param name="userName" expr="::PROJECT_NAME.Account.userName"/>
+                        <param name="email" expr="::PROJECT_NAME.Account.email"/>
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="account" expr="::PROJECT_NAME.Account.account"/>
+                        <param name="authority" expr="::PROJECT_NAME.Account.authority"/>
+                    </send>
+                    <send event="Account.UpdateUserExpertise">
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="list" expr="::Account.Client.UpdateAccount.expertiseList"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.UpdateUserExpertise" target="Account.Updated">
+                    <send event="Generic.Client.ShowMessage">
+                        <param name="formId" expr="app_dialog_messagebox"/>
+                        <param name="content" expr="{&quot;question&quot;:&quot;::PROJECT_NAME.Language[::Language][app_account_profile_modified]&quot;, &quot;ok&quot;:&quot;::PROJECT_NAME.Language[::Language][close]&quot;}"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.InfoMenu" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <qt:editorinfo endTargetFactors="19.42;19.70" startTargetFactors="93.68;63.33"/>
+                </transition>
+            </state>
+            <state id="Account.ProviderProfile">
+                <qt:editorinfo geometry="148.20;-317.19;-268.48;-46.05;288.48;100.76" scenegeometry="760.39;345.77;491.91;299.72;288.48;100.76"/>
+                <invoke src="../Account/DB/CallSP_GetExpertiseCategoryList.scxml" id="GetExpertiseCategoryList"/>
+                <invoke src="../Account/DB/CallSP_GetDeveloperExpertiseList.scxml" id="GetDeveloperExpertiseList"/>
+                <invoke src="../Account/DB/CallSP_GetUserExpertiseList.scxml" id="GetUserExpertiseList"/>
+                <invoke src="../Account/DB/CallSP_UpdateUserExpertise.scxml" id="UpdateUserExpertise"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_ProviderProfile.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="internal" event="Account.Client.UpdateAccount" cond="::Account.Client.UpdateAccount.userName≠&quot;&quot;">
+                    <assign location="PROJECT_NAME.Account.userName" expr="::Account.Client.UpdateAccount.userName"/>
+                    <assign location="PROJECT_NAME.Account.email" expr="::Account.Client.UpdateAccount.email"/>
+                    <send event="Account.UpdateAccount">
+                        <param name="userName" expr="::PROJECT_NAME.Account.userName"/>
+                        <param name="email" expr="::PROJECT_NAME.Account.email"/>
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                        <param name="account" expr="::PROJECT_NAME.Account.account"/>
+                        <param name="authority" expr="::PROJECT_NAME.Account.authority"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.UpdateAccount" target="Account.Updated">
+                    <send event="Generic.Client.ShowMessage">
+                        <param name="formId" expr="app_dialog_messagebox"/>
+                        <param name="content" expr="{&quot;question&quot;:&quot;::PROJECT_NAME.Language[::Language][app_account_profile_modified]&quot;, &quot;ok&quot;:&quot;::PROJECT_NAME.Language[::Language][close]&quot;}"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.InfoMenu" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <qt:editorinfo endTargetFactors="39.23;21.15" startTargetFactors="56.36;81.83"/>
+                </transition>
+            </state>
+            <state id="Account.Point">
+                <qt:editorinfo geometry="-325.42;222.06;-210.06;-46.31;230.06;105.21" scenegeometry="286.77;885.02;76.71;838.71;230.06;105.21"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_AccountPoint.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.PointInformation" cond="::Generic.Client.Clicked.id=&quot;app_point_information_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_point_information_label&quot; || ::Generic.Client.Clicked.id=&quot;app_point_information&quot;">
+                    <qt:editorinfo endTargetFactors="16.43;28.32"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.PointHistory" cond="::Generic.Client.Clicked.id=&quot;app_point_history_icon&quot; || ::Generic.Client.Clicked.id=&quot;app_point_history_label&quot; || ::Generic.Client.Clicked.id=&quot;app_point_history&quot;"/>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.MaintainMenu" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <qt:editorinfo endTargetFactors="73.07;81.10"/>
+                </transition>
+            </state>
+            <state id="Account.ChangePassword">
+                <qt:editorinfo geometry="385.61;-183.65;-282;-48.80;302;146.68" scenegeometry="997.80;479.31;715.80;430.51;302;146.68"/>
+                <invoke id="UpdatePassword" src="./DB/CallSP_UpdatePassword.scxml"/>
+                <invoke id="Converter" src="../Converter/Converter.scxml"/>
+                <onentry>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="true"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="::PROJECT_NAME.LayoutTemplate.helper[change_password_items]"/>
+                    <send event="ShowUI"/>
+                </onentry>
+                <onexit>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                </onexit>
+                <transition type="internal" event="Account.Client.UpdatePassword">
+                    <send event="Converter.Push">
+                        <param name="type" expr="SHA256"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.Client.UpdatePassword.password&quot;,&quot;target&quot;:&quot;Account.UpdatePassword.password&quot;}]"/>
+                    </send>
+                    <send event="Converter.Push">
+                        <param name="type" expr="BASE64"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.UpdatePassword.password&quot;,&quot;target&quot;:&quot;Account.UpdatePassword.password&quot;}]"/>
+                    </send>
+                    <send event="GetUpdatePasswordHash"/>
+                </transition>
+                <transition type="internal" event="GetUpdatePasswordHash">
+                    <send event="Account.UpdatePassword">
+                        <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;app_create_project_cancel&quot;"/>
+                <transition type="external" event="Database.Task.Done.Account.UpdatePassword" target="Account.Updated">
+                    <qt:editorinfo endTargetFactors="73.03;21.19" startTargetFactors="4.21;67.58"/>
+                    <send event="Generic.Client.ShowMessage">
+                        <param name="formId" expr="app_dialog_messagebox"/>
+                        <param name="content" expr="{&quot;question&quot;:&quot;::PROJECT_NAME.Language[::Language][app_account_password_modified]&quot;, &quot;ok&quot;:&quot;::PROJECT_NAME.Language[::Language][close]&quot;}"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.InfoMenu" cond="::Generic.Client.Clicked.id=&quot;app_change_password_cancel&quot;"/>
+            </state>
+            <state id="Account.PointInformation">
+                <qt:editorinfo geometry="-137.90;144.20;-152.75;-44.13;240;100" scenegeometry="474.29;807.16;321.54;763.03;240;100"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_AccountPointInformation.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.Point" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <qt:editorinfo startTargetFactors="16.91;69.84"/>
+                </transition>
+            </state>
+            <state id="Account.PointHistory">
+                <qt:editorinfo geometry="-233.96;360.70;-378;-50;479.50;146" scenegeometry="378.23;1023.66;0.23;973.66;479.50;146"/>
+                <invoke id="GetPointLog" src="../Point/DB/CallSP_GetPointLog.scxml"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;../Point/Layout/Layout_App_Point.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;../Point/Layout/Layout_App_PointItems.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.helper&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;../Point/Command/Command_App_Point.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.CommandTemplate.Point&quot;})</script>
+                    <assign location="PROJECT_NAME.HistoryView.startTime" expr="-30"/>
+                    <assign location="PROJECT_NAME.HistoryView.endTime" expr="0"/>
+                    <assign location="PROJECT_NAME.HistoryView.List" expr="[]"/>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="PROJECT_NAME.Client.GetPointLog">
+                    <assign location="PROJECT_NAME.HistoryView.startTime" expr="::PROJECT_NAME.Client.GetPointLog.startTime"/>
+                    <assign location="PROJECT_NAME.HistoryView.endTime" expr="::PROJECT_NAME.Client.GetPointLog.endTime"/>
+                    <assign location="PROJECT_NAME.HistoryView.List" expr="[]"/>
+                    <send event="PROJECT_NAME.GetPointLog">
+                        <param name="@payload" expr="::PROJECT_NAME.CommandTemplate.Point[GetPointLog]"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="PROJECT_NAME.GetPointLog.Result">
+                    <assign location="PROJECT_NAME.HistoryView.List[]" expr="::PROJECT_NAME.LayoutTemplate.helper[historyItem]"/>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.PROJECT_NAME.GetPointLog">
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.Point" cond="::Generic.Client.Clicked.id=&quot;go_back&quot; || ::Generic.Client.Clicked.id=&quot;btn_back&quot;">
+                    <qt:editorinfo startTargetFactors="16.91;69.84"/>
+                </transition>
+            </state>
+            <state id="Account.Updated">
+                <qt:editorinfo geometry="-188.73;-169.32;-88;-50;176;100" scenegeometry="423.46;493.64;335.46;443.64;176;100"/>
+                <transition type="external" event="Generic.Client.Clicked" target="Account.InfoMenu" cond="::Generic.Client.Clicked.id=&quot;app_dialog_messagebox&quot;">
+                    <qt:editorinfo endTargetFactors="19.54;23.91" movePoint="0;-1.13"/>
+                </transition>
+            </state>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="1104.14;443.44;-20;-20;40;40" scenegeometry="1104.14;443.44;1084.14;423.44;40;40"/>
+    </final>
+</scxml>

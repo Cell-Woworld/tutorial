@@ -1,0 +1,57 @@
+syntax = "proto3";
+package Learning;
+
+message CreateMember
+{
+	string account = 1;
+	string password = 2;
+	int32 authority = 3;
+	string deviceId = 4;
+	string userName = 5;
+	string effectiveDate = 6;
+	string expiredDate = 7;
+	string email = 8;
+	message Result
+	{
+		string userId = 1;
+	}
+}
+
+message UpdateMember
+{
+	string userId = 1;			// required
+	string account = 2;
+	int32 authority = 3;
+	string userName = 4;
+	string effectiveDate = 5;
+	string expiredDate = 6;
+	string email = 7;
+}
+
+message GetMemberList
+{
+	string userId					= 1;
+	string account				= 2;
+	string userName				= 3;
+	int32 daysToBeExipred	= 4;
+	bool isAvailableOnly	= 5;
+	message Result
+	{
+		string userId					= 1;
+		string account				= 2;
+		string userName				= 3;
+		int32 authority				= 4;
+		string email					= 5;
+		string effectiveDate	= 6;
+		string expiredDate		= 7;
+		int32 deposit					= 8;
+		int32 redeem					= 9;
+	}
+}
+
+message UpdateExpiredDate
+{
+	string userId						= 1;
+	string effectiveDate		= 2;
+	string expiredDate			= 3;
+}

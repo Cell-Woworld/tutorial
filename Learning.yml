@@ -1,0 +1,63 @@
+services:
+  web:
+    image: nginx:latest
+    container_name: Learning-Web
+    hostname: Learning-Web
+    volumes:
+        - ~/Projects/Learning/www:/usr/share/nginx/html:ro
+        - ~/Projects/Learning/conf:/etc/nginx:ro
+    ports:
+        - "8080:80"
+    depends_on:
+        - ap # ensures that db is a host that the container can find
+    networks:
+        - br1
+    environment:
+      TZ: Asia/Taipei
+
+  ap:
+    build: .
+    image: blue/learning-ap:latest
+    container_name: Learning-AP
+    hostname: Learning-AP
+    volumes:
+        - ~/Projects/Learning/bin:/root/Learning/bin:ro
+        - ~/Projects/Learning/scxml:/root/Learning/scxml:ro
+        - ~/Projects/Learning/odbc_connector/lib:/usr/local/lib:ro
+        - ~/Projects/Learning/odbc_connector/odbcinst.ini:/etc/odbcinst.ini
+        - ~/Projects/Learning/etc/resolv.conf:/etc/resolv.conf:ro
+        - ~/Projects/Learning/etc/hosts:/etc/hosts:ro
+        - ~/Projects/Learning/entrypoint.sh:/entrypoint.sh:ro
+    ports:
+        - "8888:8888"
+    depends_on:
+        - db # ensures that db is a host that the container can find
+    networks:
+        - br1
+    working_dir: /root/Learning
+    entrypoint: ["/entrypoint.sh"]
+    # stdin_open: true # docker run -i
+    # tty: true        # docker run -t
+    environment:
+      TZ: Asia/Taipei
+
+  db:
+    image: mysql:9
+    container_name: Learning-DB
+    hostname: Learning-DB
+    volumes:
+        - ~/Projects/Learning/mysql/conf:/etc/mysql/conf.d
+        - ~/Projects/Learning/mysql/logs:/logs
+        - ~/Projects/Learning/mysql/data:/var/lib/mysql
+    ports:
+        - "63306:3306"
+    networks:
+        - br1
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: p@~2H8JP
+      TZ: Asia/Taipei
+    
+networks:
+  br1:
+    external: true

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_UpdateSession" qt:editorversion="4.10.2">
+    <state id="CallSP_UpdateSession">
+        <qt:editorinfo scenegeometry="324.22;239.96;-4.51;-137.44;694.17;741.33" geometry="324.22;239.96;-328.73;-377.40;694.17;741.33"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="287.60;251.33;55.08;-48.20;539.44;508.28" geometry="-36.62;11.37;-232.52;-299.53;539.44;508.28"/>
+            <transition type="external" event="Database.Error.Account.UpdateSession" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_CallSP_UpdateSession">
+                <qt:editorinfo startTargetFactors="50.86;97.42"/>
+            </transition>
+            <state id="New_Session">
+                <qt:editorinfo scenegeometry="509.04;216.42;449.04;166.42;120;100" geometry="221.44;-34.91;-60;-50;120;100"/>
+                <transition type="external" event="Prepared" target="AssignParameters">
+                    <qt:editorinfo endTargetFactors="82.44;41.94"/>
+                </transition>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="47.73;39.91;0;0;0;0"/>
+                        <param expr="UUID" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="NewUUID"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.User.lastSessionId">
+                            <qt:editorinfo geometry="89.67;153.69;0;0;0;0"/>
+                        </param>
+                    </send>
+                    <send event="Prepared">
+                        <qt:editorinfo geometry="59.67;23.96;0;0;0;0"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Orig_Session">
+                <qt:editorinfo scenegeometry="186.04;214.85;126.04;164.85;120;100" geometry="-101.56;-36.48;-60;-50;120;100"/>
+                <onentry>
+                    <assign expr="::Account.UpdateSession.sessionId" location="PROJECT_NAME.User.lastSessionId"/>
+                    <send event="Prepared">
+                        <qt:editorinfo geometry="-0.33;-36.04;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Prepared" target="AssignParameters"/>
+            </state>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="419.27;72.84;276.14;22.84;120;100" geometry="131.67;-178.49;-143.13;-50;120;100"/>
+                <transition type="internal" event="Account.UpdateSession" target="Orig_Session">
+                    <qt:editorinfo endTargetFactors="46.48;24.21"/>
+                    <assign location="PROJECT_NAME.User.*" expr="::Account.UpdateSession.*"/>
+                </transition>
+                <transition type="external" event="Account.UpdateSession" target="New_Session" cond="::Account.UpdateSession.sessionId==&quot;&quot;">
+                    <assign location="PROJECT_NAME.User.*" expr="::Account.UpdateSession.*"/>
+                </transition>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="489.02;390.08;403.52;340.08;171;100" geometry="201.42;138.75;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.UpdateSession"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.UpdateSession"/>
+                        <param name="err_message" expr="Database.Error.Account.UpdateSession"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Account.UpdateSession" target="CallSP">
+                    <qt:editorinfo endTargetFactors="98.12;87.22"/>
+                </transition>
+            </state>
+            <state id="AssignParameters">
+                <qt:editorinfo scenegeometry="242.88;388.84;91.88;338.84;185.25;100" geometry="-44.72;137.51;-151;-50;185.25;100"/>
+                <onentry>
+                    <send event="AssignDeviceId"/>
+                </onentry>
+                <transition type="internal" event="AssignDeviceId" cond="::Account.UpdateSession.deviceId==&quot;&quot;" target="CallStoredProcedure">
+                    <qt:editorinfo endTargetFactors="16.08;40.25"/>
+                    <assign location="PROJECT_NAME.User.deviceId" expr="&quot;00000000-0000-0000-0000-000000000000&quot;">
+                        <qt:editorinfo geometry="26.72;10.32;0;0;0;0"/>
+                    </assign>
+                </transition>
+                <transition type="external" event="AssignDeviceId" target="CallStoredProcedure">
+                    <qt:editorinfo endTargetFactors="28.45;65.12" startTargetFactors="92.56;68.50"/>
+                    <assign location="PROJECT_NAME.User.deviceId" expr="::Account.UpdateSession.deviceId">
+                        <qt:editorinfo geometry="-32.89;-96.32;0;0;0;0"/>
+                    </assign>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="252.79;533.89;146.79;483.89;166;100" geometry="-71.43;293.93;-106;-50;166;100"/>
+            <transition type="external" target="Final_CallSP_UpdateSession">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_CallSP_UpdateSession">
+        <qt:editorinfo scenegeometry="360.97;663.90;340.97;643.90;40;40" geometry="360.97;663.90;-20;-20;40;40"/>
+    </final>
+</scxml>

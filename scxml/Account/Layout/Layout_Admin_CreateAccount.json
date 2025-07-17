@@ -1,0 +1,165 @@
+{
+  "CreateAccountLayout": [
+    {
+      "id": "new_account_label",
+      "component": "div",
+      "content": "::Learning.Language[::Language][admin_account_new]",
+      "class": "cardlist-menu",
+      "style": "font-size:xx-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "description": "New Account",
+      "id": "new_account",
+      "component": "v-text-field",
+      "style": "padding:60px 60px 20px;",
+      "label": "::Learning.Language[::Language][admin_account_account](15::Learning.Language[::Language][words_limit])"
+    },
+    {
+      "description": "New Password",
+      "id": "new_password1",
+      "component": "v-text-field",
+      "style": "padding:20px 60px;",
+      "type": "password",
+      "label": "::Learning.Language[::Language][title_password]"
+    },
+    {
+      "description": "New Password",
+      "id": "new_password2",
+      "component": "v-text-field",
+      "style": "padding:20px 60px;",
+      "type": "password",
+      "label": "::Learning.Language[::Language][please_input]::Learning.Language[::Language][the_same_password]"
+    },
+    {
+      "id": "admin_maintain_account_autority",
+      "component": "v-select",
+      "label": "::Learning.Language[::Language][admin_account_authority]",
+      "class": "cardlist-menu",
+      "style": "padding:20px 60px 0px;",
+      "value": "::Learning.Account.const[AUTHORITY_INDEX][BackendUser]",
+      "items": [
+        {
+          "text": "::Learning.Language[::Language][Invalid]",
+          "value": "::Learning.Account.const[AUTHORITY_INDEX][Invalid]"
+        },
+        {
+          "text": "::Learning.Language[::Language][BackendUser]",
+          "value": "::Learning.Account.const[AUTHORITY_INDEX][BackendUser]"
+        },
+        {
+          "text": "::Learning.Language[::Language][BackendAdmin]",
+          "value": "::Learning.Account.const[AUTHORITY_INDEX][BackendAdmin]"
+        }
+      ]
+    },
+    {
+      "description": "Confirm Button",
+      "id": "admin_create_new_account_confirm",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "float:left;margin:60px 0% 30px 25%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][confirm]"
+    },
+    {
+      "description": "Cancel Button",
+      "id": "admin_create_new_account_cancel",
+      "component": "v-btn",
+      "color": "gray",
+      "style": "margin:60px 20% 30px 10%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][cancel]"
+    }
+  ],
+  "ModifyAccountLayout": [
+    {
+      "id": "new_account_label",
+      "component": "div",
+      "content": "::Learning.Language[::Language][modify]",
+      "class": "cardlist-menu",
+      "style": "font-size:xx-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "id": "admin_maintain_account_account",
+      "component": "v-text-field",
+      "style": "padding:60px 60px 20px;",
+      "label": "::Learning.Language[::Language][admin_account_account](15::Learning.Language[::Language][words_limit])",
+			"value": "::Learning.AccountView.Create.account"
+    },
+    {
+      "id": "admin_maintain_account_autority",
+      "component": "v-select",
+      "label": "::Learning.Language[::Language][admin_account_authority]",
+      "class": "cardlist-menu",
+      "style": "padding:20px 60px 0px;",
+			"value": "::Learning.AccountView.Create.authority",
+      "items": [
+        {
+          "text": "::Learning.Language[::Language][Invalid]",
+          "value": "::Learning.Account.const[AUTHORITY_INDEX][Invalid]"
+        },
+        {
+          "text": "::Learning.Language[::Language][BackendUser]",
+          "value": "::Learning.Account.const[AUTHORITY_INDEX][BackendUser]"
+        },
+        {
+          "text": "::Learning.Language[::Language][BackendAdmin]",
+          "value": "::Learning.Account.const[AUTHORITY_INDEX][BackendAdmin]"
+        }
+      ]
+    },
+    {
+      "description": "Confirm Button",
+      "id": "admin_modify_account_confirm",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "float:left;margin:60px 0% 30px 25%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][confirm]"
+    },
+    {
+      "description": "Cancel Button",
+      "id": "admin_create_new_account_cancel",
+      "component": "v-btn",
+      "color": "gray",
+      "style": "margin:60px 20% 30px 10%;inline-size:20%;",
+      "content": "::Learning.Language[::Language][cancel]"
+    }
+  ],
+  "ResetPassword": [
+    {
+      "id": "admin_change_password_label",
+      "component": "div",
+      "content": "重設密碼",
+      "class": "cardlist-menu",
+      "style": "font-size:xx-large;padding-top:60px;text-align:center;"
+    },
+    {
+      "id": "admin_change_password_password1",
+      "component": "v-text-field",
+      "label": "新密碼",
+      "type": "password",
+      "style": "margin:60px 20% 0px;",
+      "class": "cardlist-menu"
+    },
+    {
+      "id": "admin_change_password_password2",
+      "component": "v-text-field",
+      "label": "輸入與上方相同的密碼",
+      "type": "password",
+      "style": "margin:20px 20% 0px;",
+      "class": "cardlist-menu"
+    },
+    {
+      "id": "admin_change_password_confirm",
+      "component": "v-btn",
+      "color": "primary",
+      "style": "clear:left;margin:60px 5% 30px 20%;inline-size:20%;float:left;",
+      "content": "確定"
+    },
+    {
+      "id": "admin_change_password_cancel",
+      "component": "v-btn",
+      "color": "gray",
+      "style": "margin:60px 20% 30px 5%;inline-size:20%;",
+      "content": "取消"
+    }
+  ]
+}

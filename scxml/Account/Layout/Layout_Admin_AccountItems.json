@@ -1,0 +1,24 @@
+{
+  "account_list_item": {
+    "text_list": [0,1],
+    "section_list": [2],
+    "id": "::Account.GetAccountList.Result.userId",
+    "account": "::Account.GetAccountList.Result.account",
+    "authority": "::Learning.Language[::Language][admin_member_::Learning.Account.const[AUTHORITY_NAME][::Account.GetAccountList.Result.authority]]",
+    "detail": {
+      "subcomponent": "div",
+      "items": [
+        {
+          "component": "v-btn",
+          "id": "admin_account_modify",
+          "content": "::Learning.Language[::Language][modify]"
+        },
+        {
+          "component": "v-btn",
+          "id": "admin_change_password",
+          "content": "::Learning.Language[::Language][admin_account_changePassword]"
+        }
+      ]
+    }
+  }
+}

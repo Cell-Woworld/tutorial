@@ -1,0 +1,24 @@
+{
+	"layout": [
+		{
+			"description": "Admin Main",
+			"id": "admin-main",
+			"component": "Tabs",
+			"items": [
+        {
+          "id": "Tab_Member",
+          "label": "::Learning.Language[::Language][Tab_Member]",
+          "items": "::(::Learning.LayoutTemplate.Tab[Tab_Member])",
+          "style": "display:flow-root;max-height:calc(94vh - 50px);"
+        },
+				{
+					"id": "Tab_MaintainAccount",
+					"label": "::Learning.Language[::Language][Tab_MaintainAccount]",
+					"invisible": "::(::Learning.Account.authority<::Learning.Account.const[AUTHORITY_INDEX][BackendAdmin])",
+          "items": "::(::Learning.LayoutTemplate.Tab[Tab_MaintainAccount])",
+          "style": "display:flow-root;max-height:calc(94vh - 50px);"
+				}
+			]
+		}
+	]
+}

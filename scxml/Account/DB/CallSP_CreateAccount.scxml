@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_CreateAccount" qt:editorversion="4.11.1">
+    <state id="CallSP_CreateAccount">
+        <qt:editorinfo scenegeometry="161.44;252.14;67.97;-54.57;452.83;645.93" geometry="161.44;252.14;-93.47;-306.71;452.83;645.93"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="254.48;252.42;257.44;12.01;410.60;414.43" geometry="-74.20;12.46;2.96;-240.41;410.60;414.43"/>
+            <transition type="external" event="Database.Error.Account.CreateAccount" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_CallSP_CreateAccount">
+                <qt:editorinfo startTargetFactors="50.46;96.93"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="426.89;145.15;283.76;95.15;120;100" geometry="172.41;-107.27;-143.13;-50;120;100"/>
+                <transition type="internal" event="Account.CreateAccount" target="Preparing"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="366.73;337.85;281.23;287.85;171;100" geometry="112.25;85.43;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.CreateAccount"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.CreateAccount"/>
+                        <param name="err_message" expr="Database.Error.Account.CreateAccount"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Account.CreateAccount" target="CallSP">
+                    <qt:editorinfo endTargetFactors="3.29;69.19"/>
+                </transition>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="599.54;127.48;445.54;76.88;202.50;176.60" geometry="345.06;-124.94;-154;-50.60;202.50;176.60"/>
+                <onentry>
+                    <assign location="PROJECT_NAME.User.*" expr="::Account.CreateAccount.*"/>
+                    <if cond="::Account.CreateAccount.deviceId==&quot;&quot;">
+                        <assign location="PROJECT_NAME.User.deviceId" expr="&quot;00000000-0000-0000-0000-000000000000&quot;"/>
+                    </if>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" target="CallStoredProcedure" event="Prepared"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="382.81;501.76;299.81;451.76;120;100" geometry="54.13;261.80;-83;-50;120;100"/>
+            <transition type="external" target="Final_CallSP_CreateAccount"/>
+        </state>
+    </state>
+    <final id="Final_CallSP_CreateAccount">
+        <qt:editorinfo scenegeometry="294.38;617.64;274.38;597.64;40;40" geometry="294.38;617.64;-20;-20;40;40"/>
+    </final>
+</scxml>

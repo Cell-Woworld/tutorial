@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_Login" qt:editorversion="10.0.2">
+    <state id="BuildSP_Login" initial="CreateSP">
+        <qt:editorinfo geometry="346.88;405.02;-351.43;-523.10;1321.91;815.41" scenegeometry="346.88;405.02;-4.55;-118.08;1321.91;815.41"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo geometry="102.38;74.63;-433.81;-508.81;1281.91;586.58" scenegeometry="449.26;479.65;15.45;-29.16;1281.91;586.58"/>
+            <transition type="internal" event="AND">
+                <send event="OR"/>
+            </transition>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo geometry="-120.50;-17.14;-110.50;-50;221;100" scenegeometry="328.76;462.51;218.26;412.51;221;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.Login"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.Login"/>
+                        <param name="err_message" expr="Database.Error.Account.Login"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.*" target="Final_BuildSP_Login"/>
+            </state>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_BuildSP_Login"/>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Setup">
+                <qt:editorinfo geometry="-186.63;-340.52;-60;-50;120;100" scenegeometry="262.63;139.13;202.63;89.13;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Prepare">
+                    <qt:editorinfo endTargetFactors="20.29;47.73"/>
+                </transition>
+                <onentry>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Prepare">
+                <qt:editorinfo geometry="173.22;-343.16;-121.50;-50;120;100" scenegeometry="622.48;136.49;500.98;86.49;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="['::Account.Login.deviceId']"/>
+                        <param name="alias" expr="InDeviceId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="UTC_NOW" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="RightNow"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="BIN_TO_UUID" name="name"/>
+                        <param name="parameters" expr="[PROJECT_NAME.User.userId]"/>
+                        <param name="alias" expr="UserId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="BIN_TO_UUID" name="name"/>
+                        <param name="parameters" expr="[PROJECT_NAME.User.deviceId]"/>
+                        <param name="alias" expr="OutDeviceId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="SHA2" name="name"/>
+                        <param name="parameters" expr="[PROJECT_NAME.User.lastSessionId,256]"/>
+                        <param name="alias" expr="LastSessionHash"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="SHA2" name="name"/>
+                        <param name="parameters" expr="[::Account.Login.nextSessionId,256]"/>
+                        <param name="alias" expr="SessionHash"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" event="Prepared" target="Prepare2"/>
+            </state>
+            <state id="Prepare2">
+                <qt:editorinfo geometry="-124.85;-180.78;-121.50;-50;120;100" scenegeometry="324.41;298.87;202.91;248.87;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param expr="TO_BASE64" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.BuildSP_Login.LastSessionHash]"/>
+                        <param name="alias" expr="LastSessionId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="TO_BASE64" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.BuildSP_Login.SessionHash]"/>
+                        <param name="alias" expr="OutSessionId"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" event="Prepared" target="Query"/>
+            </state>
+            <state id="Query">
+                <qt:editorinfo geometry="94.70;-201.50;-46;-36.50;120;100" scenegeometry="543.96;278.15;497.96;241.65;120;100"/>
+                <onentry>
+                    <send event="Database.Query">
+                        <param name="model_list" expr="[::PROJECT_NAME.BuildSP_Login.UserId, ::PROJECT_NAME.BuildSP_Login.OutSessionId, PROJECT_NAME.User.account,PROJECT_NAME.User.authority,::PROJECT_NAME.BuildSP_Login.OutDeviceId,PROJECT_NAME.User.userName,PROJECT_NAME.User.email,PROJECT_NAME.User.effectiveDate,PROJECT_NAME.User.expiredDate,PROJECT_NAME.User.deposit,PROJECT_NAME.User.redeem, PROJECT_NAME.User.password]"/>
+                    </send>
+                    <send event="StartAddCond"/>
+                </onentry>
+                <transition type="external" event="StartAddCond" target="Account"/>
+            </state>
+            <state id="Account" initial="MatchDeviceIdAccount">
+                <qt:editorinfo geometry="329.11;-142.60;-38.64;-283.96;537.63;371.38" scenegeometry="778.37;337.05;739.73;53.09;537.63;371.38"/>
+                <state id="MatchAccountSessionId">
+                    <qt:editorinfo geometry="369.95;-171.68;-99.50;-50;199;100" scenegeometry="1148.32;165.37;1048.82;115.37;199;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.BuildSP_Login.LastSessionId"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::Account.Login.sessionId"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.account"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::Account.Login.account"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::Account.Login.account"/>
+                            <param expr="!=" name="op"/>
+                            <param name="var2" expr="&quot;&quot;"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="OR" target="MatchDeviceIdAccount">
+                        <qt:editorinfo movePoint="3.09;0"/>
+                    </transition>
+                </state>
+                <state id="MatchDeviceIdAccount">
+                    <qt:editorinfo geometry="369.49;-19.45;-109.50;-50;219;100" scenegeometry="1147.86;317.60;1038.36;267.60;219;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::Account.Login.deviceId"/>
+                            <param expr="!=" name="op"/>
+                            <param expr="&quot;&quot;" name="var2"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.deviceId"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::PROJECT_NAME.BuildSP_Login.InDeviceId"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.account"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::Account.Login.account"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::Account.Login.account"/>
+                            <param expr="!=" name="op"/>
+                            <param expr="&quot;&quot;" name="var2"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="OR" target="MatchAccountPassword"/>
+                </state>
+                <state id="MatchAccountPassword">
+                    <qt:editorinfo geometry="150.19;4.18;-152.74;-73.58;233;100" scenegeometry="928.56;341.23;775.82;267.65;233;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.account"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::Account.Login.account"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.password"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::Account.Login.password"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::Account.Login.account"/>
+                            <param expr="!=" name="op"/>
+                            <param expr="&quot;&quot;" name="var2"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::Account.Login.password"/>
+                            <param expr="!=" name="op"/>
+                            <param expr="&quot;&quot;" name="var2"/>
+                        </send>
+                        <send event="StartBuild"/>
+                    </onentry>
+                    <transition type="external" event="StartBuild" target="CreateStoredProcedure"/>
+                </state>
+            </state>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26" startTargetFactors="19.45;96.26"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="-129.68;217.98;-106;-50;166;100" scenegeometry="217.20;623;111.20;573;166;100"/>
+            <transition type="external" target="Final_BuildSP_Login"/>
+        </state>
+    </state>
+    <final id="Final_BuildSP_Login">
+        <qt:editorinfo geometry="337.58;772.72;-20;-20;40;40" scenegeometry="337.58;772.72;317.58;752.72;40;40"/>
+    </final>
+</scxml>

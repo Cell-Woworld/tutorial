@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_GetExampleList" qt:editorversion="4.13.2">
+    <state id="CallSP_GetExampleList">
+        <qt:editorinfo scenegeometry="178.51;416.30;-230.18;-77.97;958.58;716.49" geometry="178.51;416.30;-408.69;-494.27;958.58;716.49"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="GetExampleList.CallSP" initial="GetExampleList.Standby">
+            <qt:editorinfo scenegeometry="109.14;394.93;-210.18;6.24;915.66;492.71" geometry="-69.37;-21.37;-319.32;-388.69;915.66;492.71"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.GetExampleList" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="79.58;96.49"/>
+            </transition>
+            <state id="GetExampleList.Standby">
+                <qt:editorinfo scenegeometry="153.45;199.35;-19.18;149.35;179;100" geometry="44.31;-195.58;-172.63;-50;179;100"/>
+                <transition type="external" event="PROJECT_NAME.GetExampleList" target="GetExampleList.Running" cond="::Database.CallSP.gateOpen">
+                    <qt:editorinfo endTargetFactors="4.58;32.11"/>
+                    <assign location="Database.CallSP.gateOpen" expr="false"/>
+                </transition>
+            </state>
+            <state id="GetExampleList.Running">
+                <qt:editorinfo scenegeometry="272.65;391.76;197.91;75.80;484.66;394.09" geometry="163.51;-3.17;-74.74;-315.96;484.66;394.09"/>
+                <state id="GetExampleList.Preparing">
+                    <qt:editorinfo scenegeometry="377.41;213.74;217.91;171.74;188;100" geometry="104.76;-178.02;-159.50;-42;188;100"/>
+                    <onentry>
+                        <send event="Database.Function">
+                            <qt:editorinfo geometry="22.51;35.81;0;0;0;0"/>
+                            <param expr="RIGHT_NOW" name="name"/>
+                            <param name="parameters" expr="[]"/>
+                            <param name="alias" expr="RightNow"/>
+                            <param name="target_model_name" expr="PROJECT_NAME.GetExampleList.RightNow"/>
+                        </send>
+                        <send event="Prepared"/>
+                    </onentry>
+                    <transition type="external" event="Prepared" target="GetExampleList.Preparing2"/>
+                </state>
+                <state id="GetExampleList.CallStoredProcedure">
+                    <qt:editorinfo scenegeometry="463.79;383.94;335.79;333.94;256;100" geometry="191.14;-7.82;-128;-50;256;100"/>
+                    <onentry>
+                        <send event="Database.CallStoredProc">
+                            <param name="show_result" expr="true"/>
+                            <param name="name" expr="PROJECT_NAME.GetExampleList"/>
+                            <param expr="PROJECT_NAME.GetExampleList.Result" name="callback_message"/>
+                            <param name="done_message" expr="Database.Task.Done.PROJECT_NAME.GetExampleList"/>
+                            <param name="err_message" expr="Database.Error.PROJECT_NAME.GetExampleList"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="Database.Task.Done.PROJECT_NAME.GetExampleList" target="GetExampleList.CallSP">
+                        <qt:editorinfo endTargetFactors="98.64;75.05"/>
+                    </transition>
+                </state>
+                <state id="GetExampleList.Preparing2">
+                    <qt:editorinfo scenegeometry="608.74;190.05;434.74;139.45;222;176.60" geometry="336.09;-201.71;-174;-50.60;222;176.60"/>
+                    <onentry>
+                        <send event="CheckExampleId"/>
+                        <send event="CheckUserId"/>
+                        <send event="CheckStartTime"/>
+                        <send event="CheckEndTime"/>
+                    </onentry>
+                    <transition type="external" event="Prepared" target="GetExampleList.CallStoredProcedure"/>
+                    <transition type="internal" cond="::PROJECT_NAME.GetExampleList.startTime=&quot;&quot;" event="CheckStartTime">
+                        <send event="Database.Function">
+                            <qt:editorinfo geometry="16.37;35.81;0;0;0;0"/>
+                            <param expr="DATE_FORMAT" name="name"/>
+                            <param name="parameters" expr="[::PROJECT_NAME.GetExampleList.RightNow, &quot;YYYY-MM-DD&quot;]"/>
+                            <param name="alias" expr="TodayStart"/>
+                            <param name="target_model_name" expr="PROJECT_NAME.GetExampleList.startTime"/>
+                        </send>
+                    </transition>
+                    <transition type="internal" event="CheckEndTime" cond="::PROJECT_NAME.GetExampleList.endTime=&quot;&quot;">
+                        <send event="Database.Function">
+                            <qt:editorinfo geometry="46.37;65.81;0;0;0;0"/>
+                            <param expr="DATE_FORMAT" name="name"/>
+                            <param name="parameters" expr="[::PROJECT_NAME.GetExampleList.RightNow, &quot;YYYY-MM-DDT23:59:59&quot;]"/>
+                            <param name="alias" expr="TodayEnd"/>
+                            <param name="target_model_name" expr="PROJECT_NAME.GetExampleList.endTime"/>
+                        </send>
+                        <send event="Prepared"/>
+                    </transition>
+                    <transition type="internal" event="CheckEndTime">
+                        <qt:editorinfo startTargetFactors="21.97;80.50" endTargetFactors="75.81;81.80"/>
+                        <send event="Prepared"/>
+                    </transition>
+                    <transition type="internal" event="CheckUserId" cond="::PROJECT_NAME.GetExampleList.userIdIncluded=&quot;&quot;">
+                        <assign location="PROJECT_NAME.GetExampleList.userIdIncluded" expr="null"/>
+                    </transition>
+                    <transition type="internal" event="CheckExampleId" cond="::PROJECT_NAME.GetExampleList.exampleId=&quot;&quot;">
+                        <assign location="PROJECT_NAME.GetExampleList.exampleId" expr="null"/>
+                    </transition>
+                </state>
+                <onexit>
+                    <assign location="Database.CallSP.gateOpen" expr="true"/>
+                </onexit>
+            </state>
+            <transition type="internal" event="ChatRoom.GetExampleList">
+                <assign location="Database.WaitForCall.name" expr="ChatRoom.GetExampleList"/>
+                <raise event="Database.WaitForCall"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="21.76;568.52;-61.24;518.52;120;100" geometry="-156.75;152.22;-83;-50;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="249.11;698.52;229.11;678.52;40;40" geometry="249.11;698.52;-20;-20;40;40"/>
+    </final>
+</scxml>

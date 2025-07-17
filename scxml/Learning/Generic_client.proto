@@ -1,0 +1,52 @@
+syntax = "proto3";
+package Generic.Client;
+
+message ConfigComplete
+{
+}
+
+message Clicked
+{
+	string id = 1;
+	string content = 2;
+}
+
+message ExitApp
+{
+}
+
+message Logout
+{
+}
+
+message Redirect
+{
+	string url = 1;
+}
+
+message ShowMessage
+{
+	string formId = 1;
+	string content = 2;
+}
+
+message Login
+{
+	string account  	= 1;
+	string password 	= 2;
+	string deviceId 	= 3;
+	string sessionId 	= 4;
+	string userName 	= 5;
+	string host     	= 6;
+	int32 timeOffset 	= 7;
+	string resetId 					= 8;
+	string registrationId 	= 9;
+	string loginType				= 10;
+	bool autoLogin					= 11;
+	message Result
+	{
+		string account = 1;
+		string sessionId = 2;
+		string message = 3;
+	}
+}

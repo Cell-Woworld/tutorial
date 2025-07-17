@@ -1,0 +1,159 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CardList" qt:editorversion="4.13.1">
+    <state id="Account">
+        <qt:editorinfo scenegeometry="355.07;-619.78;17.13;37.30;602.82;809.82" geometry="355.07;-619.78;-337.94;657.08;602.82;809.82"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="Account.LoadFileIO">
+            <qt:editorinfo scenegeometry="306.70;176.52;221.20;126.52;171;100" geometry="-48.37;796.30;-85.50;-50;171;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Account.Running" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <state id="Account.Running">
+            <qt:editorinfo scenegeometry="440.54;345.08;37.13;265.50;534.97;561.62" geometry="85.47;964.86;-403.41;-79.58;534.97;561.62"/>
+            <onentry>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Account.proto&quot;})</script>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Account_client.proto&quot;})</script>
+            </onentry>
+            <onexit>
+                <assign location="PROJECT_NAME.LayoutTemplate.Tab[Tab_MaintainAccount]" expr="[]"/>
+            </onexit>
+            <transition type="internal" event="ShowUI">
+                <assign location="PROJECT_NAME.LayoutTemplate.Tab[Tab_MaintainAccount]" expr="::PROJECT_NAME.LayoutTemplate.content[layout]"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.appMainRoot" expr="::PROJECT_NAME.LayoutTemplate.tabs[layout]"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.methodList" expr="::PROJECT_NAME.LayoutTemplate.content[methodList]"/>
+                <send event="VuetifyKits.Send">
+                    <param name="view" expr="::PROJECT_NAME.LayoutTemplate.layout"/>
+                    <param name="show_result" expr="false"/>
+                </send>
+            </transition>
+            <state id="Admin.MaintainAccount">
+                <qt:editorinfo scenegeometry="498.13;407.03;152.13;339.20;368.21;463.83" geometry="57.59;61.95;-346;-67.83;368.21;463.83"/>
+                <invoke id="GetAccountList" src="./DB/CallSP_GetAccountList.scxml"/>
+                <invoke id="CreateAccount" src="./DB/CallSP_CreateAccount.scxml"/>
+                <invoke id="UpdateAccount" src="./DB/CallSP_UpdateAccount.scxml"/>
+                <invoke id="Converter" src="../Converter/Converter.scxml"/>
+                <invoke id="UpdatePassword" src="./DB/CallSP_UpdatePassword.scxml"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_Account.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_AccountItems.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.helper&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_CreateAccount.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.CreateAccount&quot;})</script>
+                    <assign location="PROJECT_NAME.AccountView.list" expr="[]"/>
+                    <assign location="PROJECT_NAME.AccountView.map" expr="{}"/>
+                    <send event="Account.GetAccountList">
+                        <param name="minAuthority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][Invalid]"/>
+                        <param name="maxAuthority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxBackend]"/>
+                    </send>
+                </onentry>
+                <transition type="internal" event="Account.GetAccountList.Result" cond="::Account.GetAccountList.Result.authority &lt; ::PROJECT_NAME.Account.const[AUTHORITY_INDEX][AppUser] || ::Account.GetAccountList.Result.authority &gt; ::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxApp]">
+                    <assign location="PROJECT_NAME.AccountView.map[::Account.GetAccountList.Result.userId][*]" expr="::Account.GetAccountList.Result.*"/>
+                    <assign location="PROJECT_NAME.AccountView.list[]" expr="::PROJECT_NAME.LayoutTemplate.helper[account_list_item]"/>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.GetAccountList">
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Account.Client.UpdateAccount" cond="::PROJECT_NAME.Account.authority ≧ ::PROJECT_NAME.Account.const[AUTHORITY_INDEX][BackendAdmin]">
+                    <send event="Account.UpdateAccount">
+                        <param name="userId" expr="::PROJECT_NAME.AccountView.Create.userId"/>
+                        <param name="account" expr="::Account.Client.UpdateAccount.account"/>
+                        <param name="authority" expr="::Account.Client.UpdateAccount.authority"/>
+                        <param name="userName" expr="::PROJECT_NAME.AccountView.map[::PROJECT_NAME.AccountView.Create.userId][userName]"/>
+                        <param name="email" expr="::PROJECT_NAME.AccountView.map[::PROJECT_NAME.AccountView.Create.userId][email]"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.UpdateAccount">
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                    <assign location="PROJECT_NAME.AccountView.list" expr="[]"/>
+                    <assign location="PROJECT_NAME.AccountView.map" expr="{}"/>
+                    <send event="Account.GetAccountList">
+                        <param name="minAuthority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][Invalid]"/>
+                        <param name="maxAuthority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxBackend]"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Account.Client.NewAccount">
+                    <send event="Converter.Push">
+                        <param name="type" expr="SHA256"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.Client.NewAccount.password&quot;,&quot;target&quot;:&quot;Account.CreateAccount.password&quot;}]"/>
+                    </send>
+                    <send event="Converter.Push">
+                        <param name="type" expr="BASE64"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.CreateAccount.password&quot;,&quot;target&quot;:&quot;Account.CreateAccount.password&quot;}]"/>
+                    </send>
+                    <send event="GetNewPasswordHash"/>
+                </transition>
+                <transition type="internal" event="GetNewPasswordHash">
+                    <send event="Account.CreateAccount">
+                        <param name="account" expr="::Account.Client.NewAccount.account"/>
+                        <param name="authority" expr="::Account.Client.NewAccount.authority"/>
+                        <param name="deviceId" expr="::Account.Client.NewAccount.deviceId"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.CreateAccount">
+                    <assign location="PROJECT_NAME.AccountView.list" expr="[]"/>
+                    <assign location="PROJECT_NAME.AccountView.map" expr="{}"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                    <send event="Account.GetAccountList">
+                        <param name="minAuthority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][Invalid]"/>
+                        <param name="maxAuthority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxBackend]"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;admin_change_password&quot;">
+                    <assign location="Account.UpdatePassword.userId" expr="::Generic.Client.Clicked.content"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="true"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="::PROJECT_NAME.LayoutTemplate.CreateAccount[ResetPassword]"/>
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;admin_account_modify&quot;">
+                    <assign location="PROJECT_NAME.AccountView.Create.userId" expr="::Generic.Client.Clicked.content"/>
+                    <assign location="PROJECT_NAME.AccountView.Create.*" expr="::PROJECT_NAME.AccountView.map[::Generic.Client.Clicked.content][*]"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="true"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="::PROJECT_NAME.LayoutTemplate.CreateAccount[ModifyAccountLayout]"/>
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;admin_maintain_account_create&quot;">
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="true"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="::PROJECT_NAME.LayoutTemplate.CreateAccount[CreateAccountLayout]"/>
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;admin_create_new_account_cancel&quot;">
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Account.Client.UpdatePassword">
+                    <send event="Converter.Push">
+                        <param name="type" expr="SHA256"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.Client.UpdatePassword.password&quot;,&quot;target&quot;:&quot;Account.UpdatePassword.password&quot;}]"/>
+                    </send>
+                    <send event="Converter.Push">
+                        <param name="type" expr="BASE64"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.UpdatePassword.password&quot;,&quot;target&quot;:&quot;Account.UpdatePassword.password&quot;}]"/>
+                    </send>
+                    <send event="GetUpdatePasswordHash"/>
+                </transition>
+                <transition type="internal" event="GetUpdatePasswordHash">
+                    <send event="Account.UpdatePassword"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=&quot;admin_change_password_cancel&quot;">
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                    <send event="ShowUI"/>
+                </transition>
+                <transition type="internal" event="Database.Task.Done.Account.UpdatePassword">
+                    <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                    <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                    <send event="ShowUI"/>
+                </transition>
+            </state>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="704.45;421.03;684.45;401.03;40;40" geometry="704.45;421.03;-20;-20;40;40"/>
+    </final>
+</scxml>

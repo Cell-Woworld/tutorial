@@ -1,0 +1,242 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CardList" qt:editorversion="10.0.2">
+    <state id="LoginProcess">
+        <qt:editorinfo geometry="7.65;-632.40;-221.15;681.08;1201.81;1157.53" scenegeometry="7.65;-632.40;-213.50;48.68;1201.81;1157.53"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="Login.LoadFileIO">
+            <qt:editorinfo geometry="366.66;843.90;-85.50;-50;171;100" scenegeometry="374.31;226.65;288.81;176.65;171;100"/>
+            <onentry>
+                <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;../FileIO/FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Login.Running" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <state id="Login.Running">
+            <qt:editorinfo geometry="27.23;1253.58;-228.38;-282.01;1136.93;847.04" scenegeometry="34.88;636.33;-193.50;354.32;1136.93;847.04"/>
+            <invoke id="Login" src="./DB/CallSP_Login.scxml"/>
+            <invoke id="Converter" src="../Converter/Converter.scxml"/>
+            <onentry>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Account.proto&quot;})</script>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Account_client.proto&quot;})</script>
+            </onentry>
+            <state id="Service.WaitForLogin">
+                <qt:editorinfo geometry="137.11;-35.30;-187.56;-44.77;180;100" scenegeometry="171.99;601.03;-15.57;556.26;180;100"/>
+                <onentry>
+                    <script>Bio.Chromosome.GenerateUUID({&quot;target_model_name&quot;:&quot;PROJECT_NAME.Account.rawSessionId&quot;})</script>
+                </onentry>
+                <transition type="external" event="Generic.Client.Login" target="Final_2" cond="::Generic.Client.Login.resetId≠&quot;&quot;">
+                    <log label="Non-Login" expr="resetId= ::Generic.Client.Login.resetId"/>
+                    <assign location="PROJECT_NAME.ResetPasswordService.checkCode" expr="::Generic.Client.Login.resetId"/>
+                    <send event="LoginProcess.ResetPassword"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Login" target="Final_2" cond="::Generic.Client.Login.registrationId≠&quot;&quot;">
+                    <qt:editorinfo startTargetFactors="8.68;60.06"/>
+                    <log label="Non-Login" expr="registrationId= ::Generic.Client.Login.registrationId"/>
+                    <assign location="PROJECT_NAME.ApproveRegistrationService.checkCode" expr="::Generic.Client.Login.registrationId"/>
+                    <send event="LoginProcess.ApproveRegistration"/>
+                </transition>
+                <transition type="external" event="Generic.Client.Login" target="Service.Login" cond="::Generic.Client.Login.deviceId!=&quot;&quot;">
+                    <qt:editorinfo movePoint="-1.65;0"/>
+                    <send event="Account.Login">
+                        <param name="deviceId" expr="::Generic.Client.Login.deviceId"/>
+                        <param name="account" expr="::Generic.Client.Login.account"/>
+                        <param name="nextSessionId" expr="::PROJECT_NAME.Account.rawSessionId"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Login" target="Service.Login" cond="::Generic.Client.Login.sessionId!=&quot;&quot; &amp;&amp; '::PROJECT_NAME.LoginView.ClientParam.loginType'!='admin'">
+                    <qt:editorinfo movePoint="-1.65;0"/>
+                    <assign location="PROJECT_NAME.Account.autoLogin" expr="::Generic.Client.Login.autoLogin"/>
+                    <send event="Account.Login">
+                        <param name="sessionId" expr="::Generic.Client.Login.sessionId"/>
+                        <param name="account" expr="::Generic.Client.Login.account"/>
+                        <param name="nextSessionId" expr="::PROJECT_NAME.Account.rawSessionId"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Login" target="Service.LoginByAccountPassword">
+                    <qt:editorinfo endTargetFactors="9.86;28.59"/>
+                </transition>
+                <transition type="external" event="Account.ReturnMenu" target="Service.LoginByAccountPassword" cond="::Generic.Client.Login.deviceId=''">
+                    <qt:editorinfo endTargetFactors="6.62;58.29"/>
+                </transition>
+                <transition type="external" event="Account.ReturnMenu" target="Service.AppLogin"/>
+            </state>
+            <state id="Service.LoginByAccountPassword">
+                <qt:editorinfo geometry="538.94;-37.18;-229;-46.12;295.07;101.99" scenegeometry="573.82;599.15;344.82;553.03;295.07;101.99"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_UserLogin.json&quot;})</script>
+                    <send event="VuetifyKits.Send">
+                        <param name="view" expr="::return.FileIO.Read"/>
+                    </send>
+                </onentry>
+                <transition type="internal" event="Generic.Client.Login">
+                    <send event="Converter.Push">
+                        <param name="type" expr="SHA256"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Generic.Client.Login.password&quot;,&quot;target&quot;:&quot;Account.Login.password&quot;}]"/>
+                    </send>
+                    <send event="Converter.Push">
+                        <param name="type" expr="BASE64"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.Login.password&quot;,&quot;target&quot;:&quot;Account.Login.password&quot;}]"/>
+                    </send>
+                    <send event="GetPasswordHash"/>
+                </transition>
+                <transition type="external" event="GetPasswordHash" target="Service.Login">
+                    <send event="Account.Login">
+                        <param name="account" expr="::Generic.Client.Login.account"/>
+                        <param name="nextSessionId" expr="::PROJECT_NAME.Account.rawSessionId"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Service.RegistrationUI" cond="::Generic.Client.Clicked.id==&quot;app_user_register&quot;">
+                    <qt:editorinfo endTargetFactors="52.82;17.01"/>
+                </transition>
+            </state>
+            <state id="Service.Login">
+                <qt:editorinfo geometry="88.50;244.29;-163.31;-40.39;132;100" scenegeometry="123.38;880.62;-39.93;840.23;132;100"/>
+                <transition type="external" event="Account.Login.Result" cond="::Account.Login.Result.userId!=&quot;&quot;" target="Service.LoginSuccess">
+                    <log label="Account.Login.Result" expr="User &quot;::Account.Login.Result.userId&quot; login successfully with session id=::PROJECT_NAME.Account.rawSessionId, hashCode=::Account.Login.Result.sessionId"/>
+                    <send event="Generic.Client.Login.Result">
+                        <param name="sessionId" expr="::('::PROJECT_NAME.LoginView.ClientParam.loginType'=='admin'?'':'::Account.Login.Result.sessionId')"/>
+                        <param name="message" expr="login successfully"/>
+                        <param name="account" expr="::('::PROJECT_NAME.LoginView.ClientParam.loginType'=='admin'?'':'::Account.Login.Result.account')"/>
+                    </send>
+                    <assign location="PROJECT_NAME.Account.*" expr="::Account.Login.Result.*"/>
+                    <assign location="PROJECT_NAME.Account.dbDeviceId" expr="'::Account.Login.Result.deviceId'"/>
+                    <assign location="PROJECT_NAME.Account.deviceId" expr="::Generic.Client.Login.deviceId"/>
+                </transition>
+                <transition type="external" event="Account.Login.Result" target="Service.LoginByAccountPassword">
+                    <qt:editorinfo endTargetFactors="18.83;73.54"/>
+                </transition>
+            </state>
+            <state id="Service.AppLogin">
+                <qt:editorinfo geometry="423.14;163.99;-195;-50;276.50;116" scenegeometry="458.02;800.32;263.02;750.32;276.50;116"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_UserLogin.json&quot;})</script>
+                    <send event="VuetifyKits.Send">
+                        <param name="view" expr="::return.FileIO.Read"/>
+                    </send>
+                </onentry>
+                <transition type="internal" event="CheckErrorMsg" cond="::Account.Registration.errorMsg≠&quot;&quot;">
+                    <send event="Generic.Client.ShowMessage">
+                        <param name="formId" expr="app_dialog_messagebox"/>
+                        <param name="content" expr="{&quot;question&quot;:&quot;::Account.Registration.errorMsg&quot;, &quot;ok&quot;:&quot;::PROJECT_NAME.Language[::Language][close]&quot;}"/>
+                    </send>
+                    <assign location="Account.Registration.errorMsg" expr="&quot;&quot;"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Login">
+                    <qt:editorinfo startTargetFactors="19.17;62.14"/>
+                    <send event="Converter.Push">
+                        <param name="type" expr="SHA256"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Generic.Client.Login.password&quot;,&quot;target&quot;:&quot;Account.Login.password&quot;}]"/>
+                    </send>
+                    <send event="Converter.Push">
+                        <param name="type" expr="BASE64"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.Login.password&quot;,&quot;target&quot;:&quot;Account.Login.password&quot;}]"/>
+                    </send>
+                    <send event="GetPasswordHash"/>
+                </transition>
+                <transition type="external" event="GetPasswordHash" target="Service.Login">
+                    <send event="Account.Login">
+                        <param name="deviceId" expr="::Generic.Client.Login.deviceId"/>
+                        <param name="account" expr="::Generic.Client.Login.account"/>
+                        <param name="branchId" expr="'f04f0bee-fb18-11ea-8583-0242ac110003'"/>
+                    </send>
+                </transition>
+            </state>
+            <state id="Service.RegistrationUI">
+                <qt:editorinfo geometry="793.55;156.39;-212.50;-45.80;208;100" scenegeometry="828.43;792.72;615.93;746.92;208;100"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Register.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.layout&quot;})</script>
+                    <send event="VuetifyKits.Send">
+                        <param name="view" expr="::PROJECT_NAME.LayoutTemplate.layout"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Generic.Client.Clicked" target="Service.LoginByAccountPassword" cond="::Generic.Client.Clicked.id==&quot;go_back&quot; || ::Generic.Client.Clicked.id==&quot;btn_back&quot;">
+                    <qt:editorinfo startTargetFactors="33.35;17.65"/>
+                </transition>
+                <transition type="external" event="Account.Client.NewAccount" target="Service.CreateAccount">
+                    <assign location="PROJECT_NAME.Register.authority" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][AppUser]"/>
+                </transition>
+            </state>
+            <state id="Service.CreateAccount">
+                <qt:editorinfo geometry="669.41;333.35;-333;-50.60;353;176.60" scenegeometry="704.29;969.68;371.29;919.08;353;176.60"/>
+                <invoke id="CreateAccount" src="./DB/CallSP_CreateAccount.scxml"/>
+                <onentry>
+                    <send event="Converter.Push">
+                        <param name="type" expr="SHA256"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.Client.NewAccount.password&quot;,&quot;target&quot;:&quot;Account.CreateAccount.password&quot;}]"/>
+                    </send>
+                    <send event="Converter.Push">
+                        <param name="type" expr="BASE64"/>
+                        <param name="model_list" expr="[{&quot;src&quot;:&quot;Account.CreateAccount.password&quot;,&quot;target&quot;:&quot;Account.CreateAccount.password&quot;}]"/>
+                    </send>
+                    <send event="GetPasswordHash"/>
+                </onentry>
+                <transition type="internal" event="GetPasswordHash">
+                    <send event="Account.CreateAccount">
+                        <param name="account" expr="::Account.Client.NewAccount.account"/>
+                        <param name="deviceId" expr="::Account.Client.NewAccount.deviceId"/>
+                        <param name="userName" expr="::Account.Client.NewAccount.userName"/>
+                        <param name="email" expr="::Account.Client.NewAccount.email"/>
+                        <param name="authority" expr="::PROJECT_NAME.Register.authority"/>
+                    </send>
+                </transition>
+                <transition type="internal" event="Database.Error.Account.CreateAccount">
+                    <send event="Generic.Client.ShowMessage">
+                        <param name="formId" expr="app_dialog_messagebox"/>
+                        <param name="content" expr="{&quot;question&quot;:&quot;::PROJECT_NAME.Language[::Language][err_register_incorrect_account]&quot;, &quot;ok&quot;:&quot;::PROJECT_NAME.Language[::Language][close]&quot;}"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Database.Task.Done.Account.CreateAccount" target="Service.AppLogin">
+                    <qt:editorinfo endTargetFactors="70.35;59.99"/>
+                </transition>
+                <transition type="internal" event="Database.Error.Account.CreateAccount">
+                    <send event="Generic.Client.ShowMessage">
+                        <param name="formId" expr="app_dialog_messagebox"/>
+                        <param name="content" expr="{&quot;question&quot;:&quot;::PROJECT_NAME.Language[::Language][err_register_input_account]&quot;, &quot;ok&quot;:&quot;::PROJECT_NAME.Language[::Language][close]&quot;}"/>
+                    </send>
+                </transition>
+                <transition type="external" event="Generic.Client.Clicked" target="Service.RegistrationUI" cond="::Generic.Client.Clicked.id==&quot;app_dialog_messagebox&quot;">
+                    <qt:editorinfo startTargetFactors="57.61;11.71"/>
+                </transition>
+            </state>
+            <state id="Service.LoginSuccess">
+                <qt:editorinfo geometry="189.62;449.03;-398;-48.68;418;144.68" scenegeometry="224.50;1085.36;-173.50;1036.68;418;144.68"/>
+                <invoke id="UpdateDeviceId" src="./DB/CallSP_UpdateDeviceId.scxml"/>
+                <invoke id="UpdateSession" src="./DB/CallSP_UpdateSession.scxml"/>
+                <onentry>
+                    <send event="GoOn"/>
+                </onentry>
+                <transition type="internal" event="GoOn">
+                    <if cond="::PROJECT_NAME.Account.autoLogin">
+                        <send event="Account.UpdateSession">
+                            <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                            <param name="deviceId" expr="'::('::Generic.Client.Login.deviceId'≠''?'::Generic.Client.Login.deviceId':'::PROJECT_NAME.Account.dbDeviceId')'"/>
+                            <param name="sessionId" expr="::PROJECT_NAME.Account.rawSessionId"/>
+                        </send>
+                        <elseif cond="::NeedUpdateDeviceId"/>
+                        <send event="Account.UpdateDeviceId">
+                            <param name="userId" expr="::PROJECT_NAME.Account.userId"/>
+                            <param name="deviceId" expr="'::('::Generic.Client.Login.deviceId'≠''?'::Generic.Client.Login.deviceId':'::PROJECT_NAME.Account.dbDeviceId')'"/>
+                        </send>
+                        <else/>
+                        <send event="LoginProcess.Finished"/>
+                    </if>
+                </transition>
+                <transition type="external" event="GoOn">
+                    <send event="LoginProcess.Finished"/>
+                </transition>
+                <transition type="external" event="Database.Task.Done.Account.UpdateSession">
+                    <send event="LoginProcess.Finished"/>
+                </transition>
+            </state>
+            <final id="Final_2">
+                <qt:editorinfo geometry="54.43;-137.12;-20;-20;40;40" scenegeometry="89.31;499.21;69.31;479.21;40;40"/>
+            </final>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="1080.97;627.45;-20;-20;40;40" scenegeometry="1080.97;627.45;1060.97;607.45;40;40"/>
+    </final>
+</scxml>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="TrafficLight_service" qt:editorversion="10.0.2">
+    <final id="Final_1">
+        <qt:editorinfo geometry="942.02;350.04;-20;-20;40;40" scenegeometry="942.02;350.04;922.02;330.04;40;40"/>
+    </final>
+    <state id="TrafficLight">
+        <qt:editorinfo geometry="255.07;154.84;-186.89;-105.43;780.64;601.26" scenegeometry="255.07;154.84;68.18;49.41;780.64;601.26"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+            <qt:editorinfo startTargetFactors="97.94;49.92"/>
+        </transition>
+        <state id="Service.LoadFileIO">
+            <qt:editorinfo geometry="203.43;20.65;-90;-50;180;100" scenegeometry="458.50;175.49;368.50;125.49;180;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;../FileIO/FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Service.Running" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <state id="Service.Running" initial="Red Light">
+            <qt:editorinfo geometry="103.61;722.92;-265.16;-626.77;735.30;350.98" scenegeometry="358.68;877.76;93.52;250.99;735.30;350.98"/>
+            <invoke id="Timer" src="../../Timer/Timer.scxml"/>
+            <onentry>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;../TrafficLight/Layout/Layout_App_Main.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.SubItem.content&quot;})</script>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;../TrafficLight/Layout/Layout_App_Main_Item.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.SubItem.helper&quot;})</script>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;../TrafficLight/Layout/Language.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.Language&quot;})</script>
+                <assign location="Language" expr="zh_TW"/>
+                <assign location="PROJECT_NAME.TrafficLightView.GreenStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[GreenDark]"/>
+                <assign location="PROJECT_NAME.TrafficLightView.YellowStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[YellowDark]"/>
+                <assign location="PROJECT_NAME.TrafficLightView.RedStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[RedDark]"/>
+                <assign location="PROJECT_NAME.TrafficLightView.isPlaying" expr="true"/>
+            </onentry>
+            <transition type="internal" event="Generic.Client.Clicked" target="Stopped" cond="'::Generic.Client.Clicked.id'='app_trafficLight_stop'">
+                <qt:editorinfo startTargetFactors="80.43;98.34"/>
+            </transition>
+            <transition type="internal" event="Generic.Client.Clicked" cond="'::Generic.Client.Clicked.id'='app_trafficLight_pause'">
+                <assign location="PROJECT_NAME.TrafficLightView.isPlaying" expr="false"/>
+                <send event="Timer.CancelAll"/>
+                <send event="ShowUI"/>
+            </transition>
+            <state id="Green Light">
+                <qt:editorinfo geometry="143.60;-517.43;-204;-46.28;224;104.59" scenegeometry="502.28;360.33;298.28;314.05;224;104.59"/>
+                <onentry>
+                    <send event="Timer.Set">
+                        <param name="id" expr="YellowLight"/>
+                        <param name="interval" expr="3000"/>
+                    </send>
+                    <assign location="PROJECT_NAME.TrafficLightView.GreenStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[GreenLight]"/>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Timer.Timeout.YellowLight" target="Red Light">
+                    <assign location="PROJECT_NAME.TrafficLightView.GreenStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[GreenDark]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.YellowStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[YellowDark]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.RedStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[RedDark]"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="'::Generic.Client.Clicked.id'='app_trafficLight_play'">
+                    <assign location="PROJECT_NAME.TrafficLightView.isPlaying" expr="true"/>
+                    <send event="Timer.Set">
+                        <param name="id" expr="YellowLight"/>
+                        <param name="interval" expr="3000"/>
+                    </send>
+                    <send event="ShowUI"/>
+                </transition>
+            </state>
+            <state id="Yellow Light">
+                <qt:editorinfo geometry="410.14;-515.71;-204;-50;244;100" scenegeometry="768.82;362.05;564.82;312.05;244;100"/>
+                <onentry>
+                    <send event="Timer.Set">
+                        <param name="id" expr="RedLight"/>
+                        <param name="interval" expr="1500"/>
+                    </send>
+                    <assign location="PROJECT_NAME.TrafficLightView.YellowStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[YellowLight]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.GreenStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[GreenDark]"/>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Timer.Timeout.RedLight" target="Green Light">
+                    <assign location="PROJECT_NAME.TrafficLightView.GreenStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[GreenDark]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.YellowStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[YellowDark]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.RedStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[RedDark]"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="'::Generic.Client.Clicked.id'='app_trafficLight_play'">
+                    <assign location="PROJECT_NAME.TrafficLightView.isPlaying" expr="true"/>
+                    <send event="Timer.Set">
+                        <param name="id" expr="RedLight"/>
+                        <param name="interval" expr="3000"/>
+                    </send>
+                    <send event="ShowUI"/>
+                </transition>
+            </state>
+            <state id="Red Light">
+                <qt:editorinfo geometry="171.82;-351.04;-204;-50;264;100" scenegeometry="530.50;526.72;326.50;476.72;264;100"/>
+                <onentry>
+                    <send event="Timer.Set">
+                        <param name="id" expr="GreenLight"/>
+                        <param name="interval" expr="3000"/>
+                    </send>
+                    <assign location="PROJECT_NAME.TrafficLightView.RedStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[RedLight]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.YellowStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[YellowDark]"/>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="external" event="Timer.Timeout.GreenLight" target="Yellow Light">
+                    <assign location="PROJECT_NAME.TrafficLightView.GreenStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[GreenDark]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.YellowStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[YellowDark]"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.RedStyle" expr="::PROJECT_NAME.LayoutTemplate.SubItem.helper[RedDark]"/>
+                </transition>
+                <transition type="internal" event="Generic.Client.Clicked" cond="'::Generic.Client.Clicked.id'='app_trafficLight_play'">
+                    <assign location="PROJECT_NAME.TrafficLightView.isPlaying" expr="true"/>
+                    <send event="Timer.Set">
+                        <param name="id" expr="GreenLight"/>
+                        <param name="interval" expr="3000"/>
+                    </send>
+                    <send event="ShowUI"/>
+                </transition>
+            </state>
+            <state id="Stopped">
+                <qt:editorinfo geometry="326.03;-349.17;-60;-50;120;100" scenegeometry="684.71;528.59;624.71;478.59;120;100"/>
+                <onentry>
+                    <send event="Timer.CancelAll"/>
+                    <assign location="PROJECT_NAME.TrafficLightView.isPlaying" expr="false"/>
+                    <send event="ShowUI"/>
+                </onentry>
+                <transition type="internal" event="Generic.Client.Clicked" target="Service.Running" cond="'::Generic.Client.Clicked.id'='app_trafficLight_play'">
+                    <qt:editorinfo endTargetFactors="98.51;78.11"/>
+                </transition>
+            </state>
+        </state>
+    </state>
+</scxml>

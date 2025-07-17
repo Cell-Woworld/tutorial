@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="PROJECT_NAME_service" qt:editorversion="7.0.0">
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="970.56;289.44;950.56;269.44;40;40" geometry="970.56;289.44;-20;-20;40;40"/>
+    </final>
+    <state id="PROJECT_NAME_admin_service" initial="Service.LoadFileIO">
+        <qt:editorinfo scenegeometry="244.37;64.43;-147.92;-99.86;1049.90;778.60" geometry="244.37;64.43;-392.29;-164.29;1049.90;778.60"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+            <qt:editorinfo startTargetFactors="97.94;49.92"/>
+        </transition>
+        <state id="Service.LoadFileIO">
+            <qt:editorinfo scenegeometry="377.03;45.28;295.03;-4.72;164;100" geometry="132.66;-19.15;-82;-50;164;100"/>
+            <onentry>
+                <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Administration" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <state id="Administration" initial="Admin.Preparing">
+            <qt:editorinfo scenegeometry="330.22;62.57;-112.02;150.88;994;507.86" geometry="85.85;-1.86;-442.24;88.31;994;507.86"/>
+            <onentry>
+                <assign location="PROJECT_NAME.LayoutTemplate.Tab" expr="{&quot;Tab_Member&quot;:[],&quot;Tab_MaintainAccount&quot;:[]}"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.methodList" expr="[]"/>
+            </onentry>
+            <transition type="external" event="Generic.Client.Clicked" target="TabSwitch" cond="::Generic.Client.Clicked.id=&quot;Tab_Member&quot; || ::Generic.Client.Clicked.id=&quot;Tab_MaintainAccount&quot; ">
+                <qt:editorinfo startTargetFactors="49.19;97.61"/>
+                <script>Bio.Chromosome.GenerateUUID({&quot;target_model_name&quot;:&quot;PROJECT_NAME.LayoutTemplate.uuid&quot;})</script>
+                <script>Bio.Chromosome.GenerateUUID({&quot;target_model_name&quot;:&quot;PROJECT_NAME.LayoutTemplate.Dialog.uuid&quot;})</script>
+            </transition>
+            <state id="Admin.Preparing">
+                <qt:editorinfo scenegeometry="101.72;268.53;-48.28;221.96;173.44;109.46" geometry="-228.50;205.96;-150;-46.57;173.44;109.46"/>
+                <onentry>
+                    <script>Bio.Chromosome.GenerateUUID({&quot;target_model_name&quot;:&quot;PROJECT_NAME.LayoutTemplate.uuid&quot;})</script>
+                    <script>Bio.Chromosome.GenerateUUID({&quot;target_model_name&quot;:&quot;PROJECT_NAME.LayoutTemplate.Dialog.uuid&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.layout&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_Items.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.tabs&quot;})</script>
+                </onentry>
+                <transition type="internal" target="Admin.Tab_Member"/>
+            </state>
+            <state id="TabSwitch">
+                <qt:editorinfo scenegeometry="400.03;556.63;294.03;506.63;166;116" geometry="69.81;494.06;-106;-50;166;116"/>
+                <transition type="external" target="Admin.MaintainAccount" cond="::PROJECT_NAME.Account.authority≧::PROJECT_NAME.Account.const[AUTHORITY_INDEX][BackendAdmin] &amp;&amp; ::Generic.Client.Clicked.id==&quot;Tab_MaintainAccount&quot;"/>
+                <transition type="external" target="Admin.Tab_Member" cond="::Generic.Client.Clicked.id=&quot;Tab_Member&quot;"/>
+            </state>
+            <state id="Admin.Tab_Member">
+                <qt:editorinfo scenegeometry="36.53;474.95;-75.47;424.95;224;100" geometry="-293.69;412.38;-112;-50;224;100"/>
+                <invoke id="Admin_MemberList" src="../Member/Admin_MemberList.scxml"/>
+            </state>
+            <state id="Admin.MaintainAccount">
+                <qt:editorinfo scenegeometry="689.70;234.48;428.81;320.48;198;100" geometry="359.48;171.91;-260.89;86;198;100"/>
+                <invoke id="Admin_AccountManagement" src="../Account/Admin_AccountManagement.scxml"/>
+            </state>
+        </state>
+    </state>
+</scxml>

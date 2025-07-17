@@ -1,0 +1,43 @@
+/*!40101 SET NAMES utf8mb4 */;
+
+/*!40101 SET SQL_MODE=''*/;
+
+/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
+/*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
+/*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
+/*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+
+USE `Learning`;
+
+
+/*Table structure for table `Example` */
+
+DROP TABLE IF EXISTS `Example`;
+
+CREATE TABLE `Example` (
+  `exampleId` VARBINARY(16) NOT NULL,
+  `ownerId` VARBINARY(16) NOT NULL,
+  `exampleName` varchar(100) NOT NULL,
+  `startTime` datetime NOT NULL DEFAULT (UTC_TIMESTAMP),
+  `endTime` datetime NOT NULL DEFAULT (UTC_TIMESTAMP),
+  `content` varchar(1000) DEFAULT NULL,
+  `isAvailable` VARCHAR(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`exampleId`),
+  CONSTRAINT `Example_ibfk_1` FOREIGN KEY (`ownerId`) REFERENCES `User` (`userId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TRIGGER Example_OnInsert BEFORE INSERT ON `Example`
+    FOR EACH ROW SET NEW.exampleId = IFNULL(NEW.exampleId, UUID_TO_BIN(UUID(), 1));
+
+
+INSERT INTO `Learning`.`Example`
+(`ownerId`,`exampleName`,`content`)
+VALUES
+(UUID_TO_BIN('9de94510-c521-11ef-91bc-0242ac110002',1),'紅綠燈','紅綠燈學習範例');
+
+
+/*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
+/*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
+/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
+/*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;

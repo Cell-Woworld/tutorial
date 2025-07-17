@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SetupDB" qt:editorversion="7.0.0">
+    <state id="SetupDB" initial="CreateSP">
+        <qt:editorinfo geometry="386.31;2.86;-305.54;11.67;697.62;704.25" scenegeometry="386.31;2.86;80.77;14.53;697.62;704.25"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="GetMemberList">
+            <qt:editorinfo geometry="-3.82;394.05;-262.42;-276.54;638.32;345.28" scenegeometry="382.49;396.91;120.07;120.37;638.32;345.28"/>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26" startTargetFactors="66.04;95.94"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_SetupDB">
+                <qt:editorinfo startTargetFactors="49.58;97.89"/>
+            </transition>
+            <onentry>
+                <assign location="Bio.Cell.Model.DefaultReturnModelname" expr="true"/>
+            </onentry>
+            <state id="GetMemberList">
+                <qt:editorinfo geometry="-21.28;-165.82;-196;-50;137;100" scenegeometry="361.21;231.09;165.21;181.09;137;100"/>
+                <invoke src="./BuildSP_GetMemberList.scxml" id="GetMemberList">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="CreateMember"/>
+            </state>
+            <state id="UpdateExpiredDate">
+                <qt:editorinfo geometry="387.90;-28.02;-223;-50;191;100" scenegeometry="770.39;368.89;547.39;318.89;191;100"/>
+                <invoke src="./BuildSP_UpdateExpiredDate.scxml" id="UpdateExpiredDate"/>
+                <transition type="external" event="Database.Task.Done.*" target="SetupDone"/>
+            </state>
+            <state id="CreateMember">
+                <qt:editorinfo geometry="190.04;-163.58;-196;-50;137;100" scenegeometry="572.53;233.33;376.53;183.33;137;100"/>
+                <invoke src="./BuildSP_CreateMember.scxml" id="CreateMember">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateMember"/>
+            </state>
+            <state id="UpdateMember">
+                <qt:editorinfo geometry="388.91;-165.75;-196;-50;137;100" scenegeometry="771.40;231.16;575.40;181.16;137;100"/>
+                <invoke src="./BuildSP_UpdateMember.scxml" id="UpdateMember">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateExpiredDate"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="293.22;645.66;-106;-50;166;100" scenegeometry="679.53;648.52;573.53;598.52;166;100"/>
+            <transition type="external" target="Final_SetupDB"/>
+        </state>
+        <state id="SetupDone">
+            <qt:editorinfo geometry="-223.58;645.92;-60;-50;120;100" scenegeometry="162.73;648.78;102.73;598.78;120;100"/>
+            <transition type="external" target="Final_SetupDB">
+                <send event="Member.SetupDB.Done"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_SetupDB">
+        <qt:editorinfo geometry="420.42;764.30;-20;-20;40;40" scenegeometry="420.42;764.30;400.42;744.30;40;40"/>
+    </final>
+</scxml>

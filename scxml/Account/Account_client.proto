@@ -1,0 +1,54 @@
+syntax = "proto3";
+package Account.Client;
+
+message NewAccount
+{
+	string account = 1;
+	string password = 2;
+	string deviceId = 3;
+	string userName = 4;
+	string email = 5;
+	int32 authority = 6;
+}
+
+message UpdateAccount
+{
+	string account = 1;
+	string userName = 2;
+	string email = 3;
+	int32 authority = 4;
+}
+
+message UpdateAccountList
+{
+	message AccountInfo
+	{
+		string userId = 1;
+		string account = 2;
+		int32 authority = 3;
+	}
+	repeated AccountInfo accountList = 1;
+}
+
+message UpdatePassword
+{
+	string password = 1;
+}
+
+message ResetPassword
+{
+	string account = 1;
+	string password = 2;
+}
+
+message GetUserProfile
+{
+	string account = 1;
+}
+
+message UpdateUserProfile
+{
+	string userName = 1;
+	string email = 2;
+	string address = 3;
+}

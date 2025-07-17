@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Learning" qt:editorversion="4.12.4">
+    <state id="Learning" initial="Init">
+        <qt:editorinfo scenegeometry="-59.73;157.43;-340.48;2.72;1155.35;271.09" geometry="-59.73;157.43;-280.75;-154.71;1155.35;271.09"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="Learning"/>
+        </datamodel>
+        <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+        <invoke src="../Timer/Timer.scxml" id="ScheduleTimer"/>
+        <onentry>
+            <assign location="AppName" expr="Learning"/>
+        </onentry>
+        <state id="Init">
+            <qt:editorinfo geometry="-145.49;62.51;35.14;-331.10;120;100" scenegeometry="367.29;342.41;402.43;11.31;120;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;../FileIO/FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="InitDB" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <state id="InitDB">
+            <qt:editorinfo scenegeometry="318.42;116.62;163.73;66.62;120;100" geometry="378.15;-40.81;-154.69;-50;120;100"/>
+            <onentry>
+                <assign location="Database.Driver" expr="MySQL ODBC 8.0 ANSI Driver"/>
+                <assign location="Database.Server" expr="mysql"/>
+                <assign location="Database.Port" expr="3306"/>
+                <assign location="Database.Name" expr="PROJECT_NAME"/>
+                <assign location="Database.UID" expr="Learning"/>
+                <assign location="Database.Password" expr="Learning"/>
+            </onentry>
+            <transition type="external" target="SetupDB"/>
+        </state>
+        <state id="SetupDB">
+            <qt:editorinfo scenegeometry="404.37;117.04;344.37;67.04;120;100" geometry="464.10;-40.39;-60;-50;120;100"/>
+            <invoke src="./SetupDB.scxml" id="setup_db"/>
+            <onentry>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;../Account/Layout/Account_Const.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.Account.const&quot;})</script>
+                <script>FileIO.Read({&quot;filename&quot;:&quot;../Learning/Layout/Global_Const.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.Global.const&quot;})</script>
+                <assign location="PROJECT_NAME.Global.const" expr="::PROJECT_NAME.Global.const"/>
+            </onentry>
+            <transition type="external" event="SetupDB.Done" target="Websocket_Server"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <state id="Websocket_Server">
+            <qt:editorinfo scenegeometry="763.09;112.47;550.18;66.15;232.91;105.33" geometry="822.82;-44.96;-212.91;-46.32;232.91;105.33"/>
+            <onentry>
+                <send event="Websocket.Start">
+                    <param name="port" expr="8888"/>
+                </send>
+            </onentry>
+            <invoke src="../Websocket/WebsocketServer.scxml" id="websocket" autoforward="true"/>
+            <transition type="internal" event="Websocket.NewConnection">
+                <assign location="Bio.Cell.Division.filename" expr="./Learning_service.scxml"/>
+                <raise event="Bio.Cell.Division"/>
+            </transition>
+        </state>
+        <transition type="internal" event="Timer.Timeout.DDNSUpdate">
+            <send event="SendDDNSUpdateRequest"/>
+            <assign location="ddns_update_retry_counter" expr="0"/>
+            </transition>
+        </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="929.46;141.50;-20;-20;40;40" scenegeometry="929.46;141.50;909.46;121.50;40;40"/>
+    </final>
+</scxml>

@@ -1,0 +1,33 @@
+syntax = "proto3";
+package Learning.Client;
+
+message GetMemberList
+{
+	string account = 1;
+	string userName = 2;
+}
+
+message CreateMember
+{
+	string account = 1;
+	string password = 2;
+	string deviceId = 3;
+	string userName = 4;
+	string effectiveDate = 5;
+	string expiredDate = 6;
+	string email = 7;
+}
+
+message UpdateMember
+{
+	string userId = 1;
+	string account = 2;
+	int32 authority = 3;
+	string userName = 4;
+	string effectiveDate = 5;
+	string expiredDate = 6;
+	string email = 7;
+	int32 point = 8;
+	int32 paymentType = 9;
+	int32 SMSPoint = 10;
+}

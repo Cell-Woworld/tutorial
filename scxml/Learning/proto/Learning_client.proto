@@ -1,0 +1,21 @@
+syntax = "proto3";
+package Learning.Client;
+
+message ConfigComplete
+{
+}
+
+message ExitApp
+{
+}
+
+message UploadFiles
+{
+	message FileInfo
+	{
+    string ownerId 	= 1;
+		string type 		= 2;
+		bytes data 			= 3;
+	}
+	repeated FileInfo fileList = 1;
+}

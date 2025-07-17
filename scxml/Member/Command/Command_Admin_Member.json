@@ -1,0 +1,21 @@
+{
+	"CreateMember": {
+			"account": "::Learning.CreateMemberView.account",
+			"password": "::Learning.CreateMemberView.password",
+			"authority": "::Learning.Account.const[AUTHORITY_INDEX][AppUser]",
+			"deviceId": "::('::Learning.CreateMemberView.deviceId'!=''?'::Learning.CreateMemberView.deviceId':'11111111-1111-1111-1111-111111111111')",
+			"userName": "::Learning.CreateMemberView.userName",
+			"email": "::Learning.CreateMemberView.email",
+			"effectiveDate": "::Learning.CreateMemberView.effectiveDate",
+			"expiredDate": "::Learning.CreateMemberView.expiredDate"
+	},
+	"UpdateMember": {
+			"userId": "::Learning.UpdateMemberView.userId",
+			"account": "::Learning.UpdateMemberView.account",
+			"userName": "::Learning.UpdateMemberView.userName",
+			"email": "::Learning.UpdateMemberView.email",
+			"effectiveDate": "::Learning.UpdateMemberView.effectiveDate",
+			"expiredDate": "::Learning.UpdateMemberView.expiredDate",
+			"authority": "::Learning.UpdateMemberView.authority"
+	}
+}

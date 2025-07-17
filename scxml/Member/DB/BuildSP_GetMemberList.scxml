@@ -1,0 +1,235 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_GetMemberList" qt:editorversion="7.0.0">
+    <state id="BuildSP_GetMemberList">
+        <qt:editorinfo scenegeometry="172.32;480.03;-175.23;-136.18;973.31;1063.80" geometry="172.32;480.03;-347.55;-616.21;973.31;1063.80"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo scenegeometry="159.02;486.66;-155.23;-32.35;804.49;939.23" geometry="-13.30;6.63;-314.25;-519.01;804.49;939.23"/>
+            <transition type="internal" event="AND">
+                <send event="OR"/>
+            </transition>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Setup">
+                <qt:editorinfo scenegeometry="29.62;89.40;-30.38;39.40;120;100" geometry="-133.09;-372.66;-60;-50;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Preparing"/>
+                <onentry>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Query">
+                <qt:editorinfo scenegeometry="435.70;84.93;307.95;41.02;120;100" geometry="272.99;-377.13;-127.75;-43.91;120;100"/>
+                <onentry>
+                    <send event="Database.Query">
+                        <param name="model_list" expr="[::PROJECT_NAME.BuildSP_GetMemberList.OutUserId,PROJECT_NAME.User.account,PROJECT_NAME.User.userName,PROJECT_NAME.User.authority,PROJECT_NAME.User.email,PROJECT_NAME.User.effectiveDate,PROJECT_NAME.User.expiredDate,PROJECT_NAME.User.deposit,PROJECT_NAME.User.redeem]"/>
+                    </send>
+                    <send event="StartAddCond"/>
+                </onentry>
+                <transition type="external" event="StartAddCond" target="UserName"/>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo scenegeometry="522.45;598.25;411.95;548.25;221;100" geometry="359.74;136.19;-110.50;-50;221;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.GetMemberList"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.PROJECT_NAME.GetMemberList" target="Final_1"/>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="185.65;91.39;125.65;41.39;120;100" geometry="22.94;-370.67;-60;-50;120;100"/>
+                <transition type="external" event="Prepared" target="Query"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param name="name" expr="UUID_TO_BIN"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.User.userId]"/>
+                        <param name="alias" expr="InUserId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param name="name" expr="BIN_TO_UUID"/>
+                        <param name="parameters" expr="[PROJECT_NAME.User.userId]"/>
+                        <param name="alias" expr="OutUserId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param name="name" expr="TODAY"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="Today"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param name="name" expr="DATE_ADD"/>
+                        <param name="parameters" expr="[PROJECT_NAME.User.expiredDate,-::PROJECT_NAME.User.daysToBeExipred,DAY]"/>
+                        <param name="alias" expr="DayToBeWarned"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param name="name" expr="CONCAT"/>
+                        <param name="parameters" expr="['%',::PROJECT_NAME.User.userName,'%']"/>
+                        <param name="alias" expr="InUserName"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+            </state>
+            <state id="Conditions">
+                <qt:editorinfo scenegeometry="523.54;238.63;463.54;188.63;120;100" geometry="360.83;-223.43;-60;-50;120;100"/>
+                <transition type="external" event="StartBuild" target="CreateStoredProcedure"/>
+                <onentry>
+                    <send event="StartBuild"/>
+                </onentry>
+            </state>
+            <state id="UserName">
+                <qt:editorinfo scenegeometry="178.77;515.40;-41.20;170.52;462.87;180.80" geometry="16.06;53.34;-219.97;-344.88;462.87;180.80"/>
+                <state id="DontCare_UserName">
+                    <qt:editorinfo scenegeometry="80.30;275.64;-21.20;225.64;203;100" geometry="-98.47;-239.76;-101.50;-50;203;100"/>
+                    <transition type="external" event="OR" target="Check_UserName"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.User.userName"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="''"/>
+                        </send>
+                    </onentry>
+                </state>
+                <state id="Check_UserName">
+                    <qt:editorinfo scenegeometry="332.67;272.54;224.67;222.54;177;100" geometry="153.90;-242.86;-108;-50;177;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.userName"/>
+                            <param name="op" expr="LIKE"/>
+                            <param name="var2" expr="::PROJECT_NAME.BuildSP_GetMemberList.InUserName"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="AND" target="Account"/>
+                </state>
+            </state>
+            <state id="Account">
+                <qt:editorinfo scenegeometry="132.15;721.67;-45.52;371.68;228.81;298.33" geometry="-30.56;259.61;-177.67;-349.99;228.81;298.33"/>
+                <state id="DontCare_Account">
+                    <qt:editorinfo scenegeometry="67.48;479.58;-25.52;429.58;186;100" geometry="-64.67;-242.09;-93;-50;186;100"/>
+                    <transition type="external" event="OR" target="Check_Account"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.User.account"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="''"/>
+                        </send>
+                    </onentry>
+                </state>
+                <state id="Check_Account">
+                    <qt:editorinfo scenegeometry="94.03;595.35;-5.47;545.35;160;100" geometry="-38.12;-126.32;-99.50;-50;160;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.account"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::PROJECT_NAME.User.account"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="AND" target="UserId"/>
+                </state>
+            </state>
+            <state id="UserId">
+                <qt:editorinfo scenegeometry="187.29;631.54;190.26;375.66;212.39;292.12" geometry="24.58;169.48;2.97;-255.88;212.39;292.12"/>
+                <state id="DontCare_UserId">
+                    <qt:editorinfo scenegeometry="296.64;485.81;210.64;435.81;172;100" geometry="109.35;-145.73;-86;-50;172;100"/>
+                    <transition type="external" event="OR" target="Check_UserId"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.User.userId"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="null"/>
+                        </send>
+                    </onentry>
+                </state>
+                <state id="Check_UserId">
+                    <qt:editorinfo scenegeometry="311.94;597.78;212.44;547.78;160;100" geometry="124.65;-33.76;-99.50;-50;160;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.userId"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::PROJECT_NAME.BuildSP_GetMemberList.InUserId"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="AND" target="DaysToBeExipred"/>
+                </state>
+            </state>
+            <state id="DaysToBeExipred">
+                <qt:editorinfo scenegeometry="124.96;853.55;-12.88;677.11;417.74;181.48" geometry="-37.75;391.49;-137.84;-176.44;417.74;181.48"/>
+                <state id="DontCare_DaysToBeExipred">
+                    <qt:editorinfo scenegeometry="144.25;814.69;45.25;764.69;184;100" geometry="-18.84;-68.38;-99;-50;184;100"/>
+                    <transition type="external" event="OR" target="Check_DaysToBeExipred"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.User.daysToBeExipred"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="-1"/>
+                        </send>
+                    </onentry>
+                </state>
+                <state id="Check_DaysToBeExipred">
+                    <qt:editorinfo scenegeometry="340.99;807.52;258.99;757.52;164;100" geometry="177.90;-75.55;-82;-50;164;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.BuildSP_GetMemberList.Today"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="::PROJECT_NAME.BuildSP_GetMemberList.DayToBeWarned"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="AND" target="Availability"/>
+                </state>
+            </state>
+            <state id="Availability">
+                <qt:editorinfo scenegeometry="124.96;853.55;-12.88;677.11;417.74;181.48" geometry="-37.75;391.49;-137.84;-176.44;417.74;181.48"/>
+                <state id="DontCare_Availability">
+                    <qt:editorinfo scenegeometry="144.25;814.69;45.25;764.69;184;100" geometry="-18.84;-68.38;-99;-50;184;100"/>
+                    <transition type="external" event="OR" target="Check_Availability"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="::PROJECT_NAME.User.isAvailableOnly"/>
+                            <param name="op" expr="="/>
+                            <param name="var2" expr="false"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.authority"/>
+                            <param name="op" expr="≦"/>
+                            <param name="var2" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxApp]"/>
+                        </send>
+                    </onentry>
+                </state>
+                <state id="Check_Availability">
+                    <qt:editorinfo scenegeometry="340.99;807.52;258.99;757.52;164;100" geometry="177.90;-75.55;-82;-50;164;100"/>
+                    <onentry>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.authority"/>
+                            <param name="op" expr="≧"/>
+                            <param name="var2" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][AppUser]"/>
+                        </send>
+                        <send event="Database.AddCond">
+                            <param name="var1" expr="PROJECT_NAME.User.authority"/>
+                            <param name="op" expr="≦"/>
+                            <param name="var2" expr="::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxApp]"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="AND" target="Conditions"/>
+                </state>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="741.08;111.08;658.08;61.08;120;100" geometry="568.76;-368.95;-83;-50;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo scenegeometry="1030.55;316.67;1010.55;296.67;40;40" geometry="1030.55;316.67;-20;-20;40;40"/>
+    </final>
+</scxml>

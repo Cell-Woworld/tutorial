@@ -1,0 +1,26 @@
+syntax = "proto3";
+package Learning;
+
+message GetConfig
+{
+	int64 id = 1;
+	message Result
+	{
+		int64 id = 1;
+		double biddingFee = 2;
+	}
+}
+
+message UpdateConfig
+{
+	int64 id = 1;
+	double biddingFee = 2;
+}
+
+message GetNewUUID
+{
+	message Result
+	{
+		string uuid = 1;
+	}
+}

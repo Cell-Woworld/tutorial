@@ -1,0 +1,153 @@
+syntax = "proto3";
+package Account;
+
+message CreateAccount
+{
+	string account = 1;
+	string password = 2;
+	int32 authority = 3;
+	string deviceId = 4;
+	string userName = 5;
+	string email = 6;
+}
+
+message UpdateAccount
+{
+	string userId = 1;			// required
+	string account = 2;
+	int32 authority = 3;
+	string userName = 4;
+	string email = 5;
+}
+
+message GetAccountList
+{
+	string userId 			= 1;
+	string account			= 2;
+	string deviceId			= 3;
+	int32 minAuthority	= 4;
+	int32 maxAuthority	= 5;
+	message Result
+	{
+		string userId = 1;
+		string account = 2;
+		string userName = 3;
+		string email = 4;
+		string authority = 5;
+	}
+}
+
+message Login
+{
+	string account 			= 1;
+	string deviceId 		= 2;
+	string sessionId 		= 3;
+	string password 		= 4;
+	string nextSessionId= 5;
+	message Result
+	{
+		string userId 		= 1;
+		string sessionId 	= 2;
+		string account 		= 3;
+		int32 authority 	= 4;
+		string deviceId 	= 5;
+		string userName 	= 6;
+		string email 			= 7;
+		string effectiveDate= 8;
+		string expiredDate= 9;
+		int32  deposit		= 10;
+		int32  redeem			= 11;
+		string password   = 12;
+	}
+}
+
+message UpdateSession
+{
+	string userId = 1;			// required
+	string deviceId = 2;		// optional
+	string sessionId = 3;		// optional. "" means a new session
+}
+
+message UpdateDeviceId
+{
+	string userId = 1;			// required
+	string deviceId = 2;		// required
+}
+
+message UpdatePassword
+{
+	string userId = 1;
+	string account = 2;
+	string password = 3;		// required
+}
+
+message GetSession
+{
+	string userId = 1;			// required
+	message Result
+	{
+		string sessionId = 1;
+	}
+}
+
+message CreateResetPassword
+{
+	string processId = 1;
+	string account	= 2;
+	string password = 3;
+	message Result
+	{
+		string processId = 1;
+	}
+}
+
+message UpdateResetPassword
+{
+	string processId = 1;
+	string account	= 2;
+	string password = 3;
+}
+
+message GetExpertiseCategoryList
+{
+	bool isAvailableOnly 					= 1;
+	message Result
+	{
+		string categoryId						= 1;
+		string categoryName					= 2;
+		int32 displayOrder					= 3;
+		int32 isAvailable						= 4;
+	}
+}
+
+message GetDeveloperExpertiseList
+{
+	bool isAvailableOnly 					= 1;
+	message Result
+	{
+		string expertiseId					= 1;
+		string expertiseName				= 2;
+		string categoryId						= 3;
+		int32 isAvailable						= 4;
+	}
+}
+
+message GetUserExpertiseList
+{
+	string userId									= 1;
+	bool isAvailableOnly					= 2;
+	message Result
+	{
+		int64 id										= 1;
+		string userId								= 2;
+		string expertiseId					= 3;
+		string expertiseName				= 4;
+		string categoryId						= 5;
+	}
+}
+
+message UpdateUserExpertise
+{
+	string userId 								= 1;
+	repeated string list 					= 2;			// list of expertiseId
+}

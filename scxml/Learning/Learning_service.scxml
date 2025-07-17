@@ -1,0 +1,213 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Learning_service" qt:editorversion="10.0.2">
+    <final id="Final_1_service">
+        <qt:editorinfo geometry="1493.37;134.22;-20;-20;40;40" scenegeometry="1493.37;134.22;1473.37;114.22;40;40"/>
+    </final>
+    <state id="Learning_service" initial="Service">
+        <qt:editorinfo geometry="661.49;239.35;-1247.03;-641.26;2030.89;1236.26" scenegeometry="661.49;239.35;-585.54;-401.91;2030.89;1236.26"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="Learning"/>
+        </datamodel>
+        <onentry>
+            <assign location="AppName" expr="Learning"/>
+            <assign location="Database.is_global_instance" expr="true"/>
+            <assign location="Database.CallSP.gateOpen" expr="true"/>
+            <assign location="Bio.Cell.Model.DiscardNoSuchModelWarning" expr="true"/>
+            <assign location="PROJECT_NAME.Email.From" expr="cell.woworld@gmail.com"/>
+            <assign location="PROJECT_NAME.Email.cc" expr="cell.woworld@gmail.com"/>
+        </onentry>
+        <state id="Service" initial="Service.Init">
+            <qt:editorinfo geometry="2.37;39.36;-1229.40;-566.44;1990.89;1102.08" scenegeometry="663.86;278.71;-565.54;-287.73;1990.89;1102.08"/>
+            <invoke src="./Learning_Websocket.scxml" id="websocket"/>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <invoke src="../VuetifyKits/VuetifyKits.scxml" id="VuetifyKits" autoforward="true"/>
+            <onentry>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;./Generic_client.proto&quot;})</script>
+            </onentry>
+            <transition type="internal" event="Websocket.Service.ConnectionClosed">
+                <send event="Bio.Cell.Destroyed"/>
+            </transition>
+            <transition type="internal" event="PROJECT_NAME.TargetConfig">
+                <assign location="PROJECT_NAME.HomeView.targetId" expr="::PROJECT_NAME.TargetConfig.targetId"/>
+            </transition>
+            <state id="Service.Init">
+                <qt:editorinfo geometry="-859.14;163.13;32.64;-331.10;125;100" scenegeometry="-195.28;441.84;-162.64;110.74;125;100"/>
+                <onentry>
+                    <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;FileIO&quot;})</script>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Language.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.Language&quot;})</script>
+                    <assign location="Language" expr="zh_TW"/>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;../Learning/Layout/Global_Const.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.Global.const&quot;})</script>
+                    <assign location="PROJECT_NAME.Global.const" expr="::PROJECT_NAME.Global.const"/>
+                </onentry>
+                <transition type="external" target="Tutorial1" cond="::return.Bio.Cell.NewRNA"/>
+            </state>
+            <state id="Tutorial2">
+                <qt:editorinfo geometry="-91.60;-121.43;-339.69;-91.63;1162.32;728.70" scenegeometry="572.26;157.28;232.57;65.65;1162.32;728.70"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;../Account/Layout/Account_Const.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.Account.const&quot;})</script>
+                </onentry>
+                <state id="Tut2.Standby">
+                    <qt:editorinfo geometry="-188.38;112.48;-81;-50;162;100" scenegeometry="383.88;269.76;302.88;219.76;162;100"/>
+                    <transition type="internal" event="Websocket.Service.Config" target="Tut2.DBSetup"/>
+                </state>
+                <state id="Tut2.DBSetup">
+                    <qt:editorinfo geometry="57.87;113.28;-83;-50;166;100" scenegeometry="630.13;270.56;547.13;220.56;166;100"/>
+                    <onentry>
+                        <assign location="PROJECT_NAME.Database.Setup.port" expr="3306"/>
+                        <assign location="PROJECT_NAME.Database.Setup.uid" expr="Learning"/>
+                        <assign location="PROJECT_NAME.Database.Setup.pwd" expr="Learning"/>
+                        <send event="Database.Setup">
+                            <param expr="MySQL ODBC 8.0 ANSI Driver" name="driver"/>
+                            <param name="server" expr="mysql"/>
+                            <param name="port" expr="::PROJECT_NAME.Database.Setup.port"/>
+                            <param name="database" expr="PROJECT_NAME"/>
+                            <param name="uid" expr="::PROJECT_NAME.Database.Setup.uid"/>
+                            <param name="pwd" expr="::PROJECT_NAME.Database.Setup.pwd"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="Database.Setup.Successfully" target="Tut2.InitConfig"/>
+                </state>
+                <state id="Tut2.InitConfig">
+                    <qt:editorinfo geometry="-120.20;245.90;-195.50;-46.31;215.50;105.17" scenegeometry="452.06;403.18;256.56;356.87;215.50;105.17"/>
+                    <invoke id="Timer" src="../scxml/Timer/Timer.scxml"/>
+                    <onentry>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;./Generic_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Account/Account_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../VuetifyKits/VuetifyKits.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Member/Member_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Learning/proto/Learning_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <send event="Timer.Now">
+                            <param name="id" expr="RightNow"/>
+                        </send>
+                    </onentry>
+                    <transition type="internal" event="Generic.Client.ConfigComplete" target="Tut2.LoginProcess"/>
+                    <transition type="external" event="Timer.Now.Result" cond="::Timer.Now.Result.id='RightNow'">
+                        <assign location="PROJECT_NAME.Service.rightNow" expr="'::Timer.Now.Result.localTime[0]-::Timer.Now.Result.localTime[1]-::Timer.Now.Result.localTime[2]'"/>
+                        <assign location="PROJECT_NAME.Service.rightNow.epoch" expr="::Timer.Now.Result.epoch/1000"/>
+                        <send event="Generic.Client.ConfigComplete"/>
+                    </transition>
+                </state>
+                <state id="Tut2.LoginProcess">
+                    <qt:editorinfo geometry="132.16;237.32;-195;-46.77;251.82;112.77" scenegeometry="704.42;394.60;509.42;347.83;251.82;112.77"/>
+                    <invoke src="../Account/LoginProcess.scxml" id="LoginProcess"/>
+                    <onentry>
+                        <assign location="PROJECT_NAME.ImageOutputPath.prefix" expr="../../../Client/public/.data/images"/>
+                        <assign location="PROJECT_NAME.Server.host" expr="'http://woworld.nsupdate.info:8080'"/>
+                        <assign location="PROJECT_NAME.ImageViewPath.defaultPrefix" expr="&quot;/.data/images&quot;"/>
+                        <assign location="PROJECT_NAME.Server.host" expr="::('::PROJECT_NAME.Server.host'==''?'::Generic.Client.Login.host':'::PROJECT_NAME.Server.host')"/>
+                        <assign location="PROJECT_NAME.ImageViewPath.prefix" expr="::PROJECT_NAME.Server.host::PROJECT_NAME.ImageViewPath.defaultPrefix"/>
+                    </onentry>
+                    <transition type="internal" event="Generic.Client.Login">
+                        <assign location="PROJECT_NAME.Server.host" expr="::('::PROJECT_NAME.Server.host'==''?'::Generic.Client.Login.host':'::PROJECT_NAME.Server.host')"/>
+                        <assign location="PROJECT_NAME.ImageViewPath.prefix" expr="::PROJECT_NAME.Server.host::PROJECT_NAME.ImageViewPath.defaultPrefix"/>
+                        <assign location="PROJECT_NAME.LoginView.ClientParam.*" expr="::Generic.Client.Login.*"/>
+                        <assign location="PROJECT_NAME.ConfigView.timeOffset" expr="::Generic.Client.Login.timeOffset"/>
+                    </transition>
+                    <transition type="external" event="LoginProcess.Finished" target="Tut2.Running"/>
+                </state>
+                <state id="Tut2.Running" initial="Tut2.EntryDispatcher">
+                    <qt:editorinfo geometry="574.25;122.23;-334.38;-130.13;562.76;564.06" scenegeometry="1146.51;279.51;812.13;149.38;562.76;564.06"/>
+                    <state id="Tut2.EntryDispatcher">
+                        <qt:editorinfo geometry="-83.42;166.26;-210.75;-43.38;220;100" scenegeometry="1063.09;445.77;852.34;402.39;220;100"/>
+                        <onentry>
+                            <send event="CheckAuthority"/>
+                        </onentry>
+                        <transition type="external" event="CheckAuthority" target="Tut2.Admin" cond="::PROJECT_NAME.Account.authority≧::PROJECT_NAME.Account.const[AUTHORITY_INDEX][BackendUser]"/>
+                        <transition type="external" event="CheckAuthority" target="Tut2.App" cond="::PROJECT_NAME.Account.authority≧::PROJECT_NAME.Account.const[AUTHORITY_INDEX][AppUser] &amp;&amp; ::PROJECT_NAME.Account.authority＜::PROJECT_NAME.Account.const[AUTHORITY_INDEX][MaxApp] &amp;&amp; '::PROJECT_NAME.LoginView.ClientParam.loginType'≠'admin'"/>
+                        <transition type="external" event="CheckAuthority" target="Tut2.InvalidUser"/>
+                    </state>
+                    <state id="Tut2.App">
+                        <qt:editorinfo geometry="-84.98;-1.79;-223;-54.50;243;120.50" scenegeometry="1061.53;277.72;838.53;223.22;243;120.50"/>
+                        <invoke id="AppService" src="./Learning_app_tutorial2.scxml"/>
+                        <transition type="internal" event="PROJECT_NAME.ExitApp">
+                            <send event="Generic.Client.ExitApp"/>
+                        </transition>
+                        <transition type="internal" event="PROJECT_NAME.Logout">
+                            <send event="Generic.Client.Logout"/>
+                        </transition>
+                    </state>
+                    <state id="Tut2.InvalidUser">
+                        <qt:editorinfo geometry="-74.58;347.21;-200.50;-40.39;184;100" scenegeometry="1071.93;626.72;871.43;586.33;184;100"/>
+                        <onentry>
+                            <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_InvalidLogin.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.layout&quot;})</script>
+                            <send event="VuetifyKits.Send">
+                                <param name="view" expr="::PROJECT_NAME.LayoutTemplate.layout"/>
+                            </send>
+                        </onentry>
+                        <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id==&quot;go_back&quot; || ::Generic.Client.Clicked.id==&quot;btn_back&quot;" target="Tut2.LoginProcess">
+                            <assign location="PROJECT_NAME.LoginView.ClientParam.account"/>
+                            <send event="Account.ReturnMenu"/>
+                        </transition>
+                    </state>
+                    <state id="Tut2.Admin">
+                        <qt:editorinfo geometry="180.01;169.90;-223;-50;251.37;100" scenegeometry="1326.52;449.41;1103.52;399.41;251.37;100"/>
+                        <invoke id="AdminService" src="./Learning_admin_service.scxml"/>
+                        <transition type="internal" event="PROJECT_NAME.ExitApp">
+                            <send event="Generic.Client.ExitApp"/>
+                        </transition>
+                    </state>
+                </state>
+            </state>
+            <state id="Tutorial1">
+                <qt:editorinfo geometry="-225.62;-423.09;-202.31;-30.38;750.57;200.08" scenegeometry="438.24;-144.38;235.93;-174.76;750.57;200.08"/>
+                <state id="Tut1.Standby">
+                    <qt:editorinfo geometry="-122.31;81.54;-60;-50;120;100" scenegeometry="315.93;-62.84;255.93;-112.84;120;100"/>
+                    <transition type="external" event="Websocket.Service.Config" target="Tut1.InitConfig"/>
+                </state>
+                <state id="Tut1.InitConfig">
+                    <qt:editorinfo geometry="211.42;76.85;-164.75;-43.73;154;100" scenegeometry="649.66;-67.53;484.91;-111.26;154;100"/>
+                    <onentry>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;./Generic_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Account/Account_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../VuetifyKits/VuetifyKits.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Member/Member_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Learning/proto/Learning_client.proto&quot;})</script>
+                        <send event="Web.AddProto">
+                            <param name="content" expr="::return.FileIO.Read"/>
+                        </send>
+                        <send event="Generic.Client.ConfigComplete"/>
+                    </onentry>
+                    <transition type="internal" event="Generic.Client.ConfigComplete" target="Tut1.App"/>
+                </state>
+                <state id="Tut1.App">
+                    <qt:editorinfo geometry="508.26;75;-223;-50.86;243;116.86" scenegeometry="946.50;-69.38;723.50;-120.24;243;116.86"/>
+                    <invoke id="AppService" src="./Learning_app_tutorial1.scxml"/>
+                    <transition type="internal" event="PROJECT_NAME.ExitApp">
+                        <send event="Generic.Client.ExitApp"/>
+                    </transition>
+                    <transition type="internal" event="PROJECT_NAME.Logout">
+                        <send event="Generic.Client.Logout"/>
+                    </transition>
+                </state>
+            </state>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1_service"/>
+    </state>
+</scxml>

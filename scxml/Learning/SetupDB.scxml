@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SetupDB" qt:editorversion="10.0.2">
+    <qt:editorinfo removedInitial="GetThreadList"/>
+    <state id="SetupDB" initial="CreateSP">
+        <qt:editorinfo geometry="408.28;-0.06;-403.55;-47.03;756.80;743.66" scenegeometry="408.28;-0.06;4.73;-47.09;756.80;743.66"/>
+        <state id="CreateSP" initial="LoginSetup">
+            <qt:editorinfo geometry="-137.80;222.74;-245.75;-136.87;712.62;331.29" scenegeometry="270.48;222.68;24.73;85.81;712.62;331.29"/>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26" startTargetFactors="22.85;97.60"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_SetupDB">
+                <qt:editorinfo startTargetFactors="49.58;97.89"/>
+            </transition>
+            <onentry>
+                <assign location="Bio.Cell.Model.DefaultReturnModelname" expr="true"/>
+            </onentry>
+            <state id="LoginSetup">
+                <qt:editorinfo geometry="-63.25;-23.26;-162.50;-50;147;100" scenegeometry="207.23;199.42;44.73;149.42;147;100"/>
+                <invoke src="../Account/DB/SetupDB.scxml" id="LoginSetup">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Account.SetupDB.Done" target="ExampleSetup"/>
+            </state>
+            <state id="UpdateConfig">
+                <qt:editorinfo geometry="301.69;102.94;-198;-50;141;100" scenegeometry="572.17;325.62;374.17;275.62;141;100"/>
+                <invoke src="../Learning/DB/BuildSP_UpdateConfig.scxml" id="UpdateConfig">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="SetupDone"/>
+            </state>
+            <state id="GetConfig">
+                <qt:editorinfo geometry="506.01;100.87;-187.50;-50;120;100" scenegeometry="776.49;323.55;588.99;273.55;120;100"/>
+                <invoke src="../Learning/DB/BuildSP_GetConfig.scxml" id="GetConfig">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateConfig"/>
+            </state>
+            <state id="ExampleSetup">
+                <qt:editorinfo geometry="54.57;-23.85;-67;-50;134;100" scenegeometry="325.05;198.83;258.05;148.83;134;100"/>
+                <invoke src="../Example/DB/SetupDB.scxml" id="ExampleSetup"/>
+                <transition type="external" event="Example.SetupDB.Done" target="MemberSetup"/>
+            </state>
+            <state id="MemberSetup">
+                <qt:editorinfo geometry="276.74;-26.96;-67;-50;134;100" scenegeometry="547.22;195.72;480.22;145.72;134;100"/>
+                <invoke src="../Member/DB/SetupDB.scxml" id="MemberSetup"/>
+                <transition type="external" event="Member.SetupDB.Done" target="GetConfig"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="-253.12;626.63;-106;-50;166;100" scenegeometry="155.16;626.57;49.16;576.57;166;100"/>
+            <transition type="external" target="Final_SetupDB"/>
+        </state>
+        <state id="SetupDone">
+            <qt:editorinfo geometry="267.66;616.30;-60;-50;120;100" scenegeometry="675.94;616.24;615.94;566.24;120;100"/>
+            <transition type="external" target="Final_SetupDB">
+                <send event="SetupDB.Done"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_SetupDB">
+        <qt:editorinfo geometry="387.70;734.49;-20;-20;40;40" scenegeometry="387.70;734.49;367.70;714.49;40;40"/>
+    </final>
+</scxml>

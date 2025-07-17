@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_UpdateDeviceId" qt:editorversion="4.11.1">
+    <state id="CallSP_UpdateDeviceId">
+        <qt:editorinfo scenegeometry="324.22;239.96;-4.51;-137.44;694.17;741.33" geometry="324.22;239.96;-328.73;-377.40;694.17;741.33"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="287.60;251.33;55.08;-48.88;539.44;508.96" geometry="-36.62;11.37;-232.52;-300.21;539.44;508.96"/>
+            <transition type="external" event="Database.Error.Account.UpdateDeviceId" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_CallSP_UpdateDeviceId">
+                <qt:editorinfo startTargetFactors="53.21;97.33"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="425.70;71.66;282.57;21.66;120;100" geometry="138.10;-179.67;-143.13;-50;120;100"/>
+                <transition type="internal" event="Account.UpdateDeviceId" target="AssignParameters"/>
+            </state>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo scenegeometry="342.57;388.90;257.07;338.90;171;100" geometry="54.97;137.57;-85.50;-50;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.UpdateDeviceId"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.UpdateDeviceId"/>
+                        <param name="err_message" expr="Database.Error.Account.UpdateDeviceId"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.Account.UpdateDeviceId" target="CallSP">
+                    <qt:editorinfo endTargetFactors="98.12;87.22"/>
+                </transition>
+            </state>
+            <state id="AssignParameters">
+                <qt:editorinfo scenegeometry="400.95;213.40;265.57;163.40;154;100" geometry="113.35;-37.93;-135.38;-50;154;100"/>
+                <onentry>
+                    <assign location="PROJECT_NAME.User.*" expr="::Account.UpdateDeviceId.*"/>
+                    <send event="AssignDeviceId"/>
+                </onentry>
+                <transition type="external" event="AssignDeviceId" cond="::Account.UpdateDeviceId.deviceId==&quot;&quot;" target="CallStoredProcedure">
+                    <qt:editorinfo endTargetFactors="16.08;40.25"/>
+                    <assign location="PROJECT_NAME.User.deviceId" expr="&quot;00000000-0000-0000-0000-000000000000&quot;"/>
+                </transition>
+                <transition type="external" event="AssignDeviceId" target="CallStoredProcedure">
+                    <qt:editorinfo endTargetFactors="72.04;17.99"/>
+                    <assign location="PROJECT_NAME.User.deviceId" expr="::Account.UpdateDeviceId.deviceId"/>
+                </transition>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="172.73;528;66.73;478;166;100" geometry="-151.49;288.04;-106;-50;166;100"/>
+            <transition type="external" target="Final_CallSP_UpdateDeviceId"/>
+        </state>
+    </state>
+    <final id="Final_CallSP_UpdateDeviceId">
+        <qt:editorinfo scenegeometry="342.57;659.19;322.57;639.19;40;40" geometry="342.57;659.19;-20;-20;40;40"/>
+    </final>
+</scxml>

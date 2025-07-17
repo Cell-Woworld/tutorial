@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SetupDB" qt:editorversion="7.0.0">
+    <state id="SetupDB" initial="CreateSP">
+        <qt:editorinfo scenegeometry="454.22;446.79;12.91;22.06;1088.42;753.63" geometry="454.22;446.79;-441.31;-424.73;1088.42;753.63"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="GetExampleList">
+            <qt:editorinfo scenegeometry="346.61;533.92;32.91;115.20;1039.31;456.33" geometry="-107.61;87.13;-313.70;-418.72;1039.31;456.33"/>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26" startTargetFactors="60.50;96.36"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_SetupDB">
+                <qt:editorinfo startTargetFactors="51.60;96.08"/>
+            </transition>
+            <onentry>
+                <assign location="Bio.Cell.Model.DefaultReturnModelname" expr="true"/>
+            </onentry>
+            <state id="GetExampleList">
+                <qt:editorinfo scenegeometry="274.42;246.10;80.92;196.10;132;100" geometry="-72.19;-287.82;-193.50;-50;132;100"/>
+                <invoke src="./BuildSP_GetExampleList.scxml" id="GetExampleList"/>
+                <transition type="external" event="Database.Task.Done.PROJECT_NAME.GetExampleList" target="CreateExample"/>
+            </state>
+            <state id="CreateExample">
+                <qt:editorinfo scenegeometry="470.10;246.18;267.60;196.18;150;100" geometry="123.49;-287.74;-202.50;-50;150;100"/>
+                <invoke src="./BuildSP_CreateExample.scxml" id="CreateExample"/>
+                <transition type="external" event="Database.Task.Done.PROJECT_NAME.CreateExample" target="UpdateExample"/>
+            </state>
+            <state id="UpdateExample">
+                <qt:editorinfo scenegeometry="676.29;246.65;473.79;196.65;150;100" geometry="329.68;-287.27;-202.50;-50;150;100"/>
+                <invoke src="./BuildSP_UpdateExample.scxml" id="UpdateExample"/>
+                <transition type="external" event="Database.Task.Done.PROJECT_NAME.UpdateExample" target="GetNewUUID"/>
+            </state>
+            <state id="GetRightNow">
+                <qt:editorinfo scenegeometry="1094.16;240.23;891.66;190.23;150;100" geometry="747.55;-293.69;-202.50;-50;150;100"/>
+                <invoke src="./BuildSP_GetRightNow.scxml" id="GetRightNow"/>
+                <transition type="external" event="Database.Task.Done.*" target="GetNewUUID"/>
+            </state>
+            <state id="GetNewUUID">
+                <qt:editorinfo scenegeometry="1099.92;375.28;897.42;325.28;150;100" geometry="753.31;-158.64;-202.50;-50;150;100"/>
+                <invoke src="./BuildSP_GetNewUUID.scxml" id="GetNewUUID"/>
+                <transition type="external" event="Database.Task.Done.*" target="SetupDone"/>
+            </state>
+            <state id="GetExampleMembers">
+                <qt:editorinfo scenegeometry="879.94;244.88;660.94;194.88;183;100" geometry="533.33;-289.04;-219;-50;183;100"/>
+                <invoke src="./BuildSP_GetExampleMembers.scxml" id="GetExampleMembers"/>
+                <transition type="external" event="Database.Task.Done.*" target="GetRightNow"/>
+            </state>
+            <state id="CreateUserVSExample">
+                <qt:editorinfo scenegeometry="772.98;371.72;686.98;321.72;172;100" geometry="426.37;-162.20;-86;-50;172;100"/>
+                <invoke src="./BuildSP_CreateUserVSExample.scxml" id="CreateUserVSExample"/>
+                <transition type="external" event="Database.Task.Done.*" target="GetUserVSExample"/>
+            </state>
+            <state id="GetUserVSExample">
+                <qt:editorinfo scenegeometry="549.22;373.22;463.22;323.22;172;100" geometry="202.61;-160.70;-86;-50;172;100"/>
+                <invoke src="./BuildSP_GetUserVSExample.scxml" id="GetUserVSExample"/>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateUserVSExample"/>
+            </state>
+            <state id="UpdateUserVSExample">
+                <qt:editorinfo scenegeometry="335.88;375.62;249.88;325.62;172;100" geometry="-10.73;-158.30;-86;-50;172;100"/>
+                <invoke src="./BuildSP_UpdateUserVSExample.scxml" id="UpdateUserVSExample"/>
+                <transition type="external" event="Database.Task.Done.*" target="DeleteUserVSExample"/>
+            </state>
+            <state id="DeleteUserVSExample">
+                <qt:editorinfo scenegeometry="151.71;365.38;62.21;315.38;179;100" geometry="-194.90;-168.54;-89.50;-50;179;100"/>
+                <invoke src="./BuildSP_DeleteUserVSExample.scxml" id="DeleteUserVSExample"/>
+                <transition type="external" event="Database.Task.Done.*" target="SetupDone"/>
+            </state>
+        </state>
+        <state id="SetupDone">
+            <qt:editorinfo scenegeometry="156.27;705.69;96.27;655.69;120;100" geometry="-297.95;258.90;-60;-50;120;100"/>
+            <transition type="external" target="Final_SetupDB">
+                <send event="Example.SetupDB.Done"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="1018.77;692.26;912.77;642.26;166;100" geometry="564.55;245.47;-106;-50;166;100"/>
+            <transition type="external" target="Final_SetupDB"/>
+        </state>
+    </state>
+    <final id="Final_SetupDB">
+        <qt:editorinfo scenegeometry="569.35;850.06;549.35;830.06;40;40" geometry="569.35;850.06;-20;-20;40;40"/>
+    </final>
+</scxml>

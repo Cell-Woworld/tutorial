@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_CreateExample" qt:editorversion="7.0.0">
+    <state id="BuildSP_CreateExample">
+        <qt:editorinfo removedInitial="Setup" geometry="-285.18;527.14;381.61;-752.73;894.70;585.92" scenegeometry="-285.18;527.14;96.43;-225.59;894.70;585.92"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo geometry="293.18;10.65;186.92;-688.22;550.84;464.76" scenegeometry="8;537.79;194.92;-150.43;550.84;464.76"/>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <transition type="external" event="Database.Error.*" target="error"/>
+            <state id="Setup">
+                <qt:editorinfo geometry="270.74;-562.68;-60;-50;120;100" scenegeometry="278.74;-24.89;218.74;-74.89;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Prepare"/>
+                <onentry>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Prepare">
+                <qt:editorinfo geometry="563.29;-566.48;-60;-50;120;100" scenegeometry="803.94;23.01;743.94;-26.99;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.Example.exampleId]"/>
+                        <param name="alias" expr="ExampleId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.Example.exampleId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.Example.ownerId]"/>
+                        <param name="alias" expr="OwnerId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.Example.ownerId"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" event="Prepared" target="Insert"/>
+            </state>
+            <state id="Insert">
+                <qt:editorinfo geometry="270.82;-373.67;-46;-36.50;120;100" scenegeometry="511.47;215.82;465.47;179.32;120;100"/>
+                <onentry>
+                    <send event="Database.Insert">
+                        <param name="model_list" expr="[PROJECT_NAME.Example.exampleId, PROJECT_NAME.Example.exampleName, PROJECT_NAME.Example.ownerId, PROJECT_NAME.Example.startTime, PROJECT_NAME.Example.endTime, PROJECT_NAME.Example.content]"/>
+                    </send>
+                    <send event="StartBuild"/>
+                </onentry>
+                <transition type="external" target="CreateStoredProcedure" event="StartBuild"/>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo geometry="543.78;-363.51;-110.50;-50;221;100" scenegeometry="551.78;174.28;441.28;124.28;221;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.CreateExample"/>
+                        <param name="done_message" expr="Database.Task.Done.PROJECT_NAME.CreateExample"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.*" target="Final_1"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="1219.31;-501.42;-83;-50;120;100" scenegeometry="1430.74;126.40;1347.74;76.40;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+            <qt:editorinfo startTargetFactors="98.64;72.34"/>
+        </transition>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="1083.44;133.66;-20;-20;40;40" scenegeometry="1083.44;133.66;1063.44;113.66;40;40"/>
+    </final>
+</scxml>

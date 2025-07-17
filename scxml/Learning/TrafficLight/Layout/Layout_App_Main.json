@@ -1,0 +1,157 @@
+{
+  "tutorial1": [
+    {
+      "id": "app_trafficLight_stop",
+      "component": "IconButton",
+      "iconized": true,
+      "icon": "mdi-stop",
+      "size": "30",
+      "style": "position:absolute;top:2px;right:5px;height:34px;width:34px;color:orange;"
+    },
+    {
+      "id": "app_trafficLight_pause",
+      "component": "IconButton",
+      "iconized": true,
+      "icon": "mdi-pause",
+      "size": "30",
+      "style": "position:absolute;top:2px;right:45px;height:34px;width:34px;color:orange;",
+      "invisible": "::(::Learning.TrafficLightView.isPlaying==true?'false':'true')"
+    },
+    {
+      "id": "app_trafficLight_play",
+      "component": "IconButton",
+      "iconized": true,
+      "icon": "mdi-play",
+      "size": "30",
+      "style": "position:absolute;top:2px;right:45px;height:34px;width:34px;color:orange;",
+      "invisible": "::(::Learning.TrafficLightView.isPlaying==true?'true':'false')"
+    },
+    {
+      "id": "app_trafficLight",
+      "component": "Section",
+      "subcomponent": "div",
+      "style": "margin:40px 5% 0px;max-height:calc(100vh - 60px - 30px);overflow:hidden auto;border-radius:30px;background-color:white;",
+      "items": [
+        {
+          "id": "app_trafficLight_red",
+          "component": "div",
+          "style":"::Learning.TrafficLightView.RedStyle"
+        },
+        {
+          "id": "app_trafficLight_yellow",
+          "component": "div",
+          "style":"::Learning.TrafficLightView.YellowStyle"
+        },
+        {
+          "id": "app_trafficLight_green",
+          "component": "div",
+          "style":"::Learning.TrafficLightView.GreenStyle"
+        }
+      ]
+    }
+  ],
+  "tutorial2": [
+    {
+      "id": "app_trafficLight_stop",
+      "component": "IconButton",
+      "iconized": true,
+      "icon": "mdi-stop",
+      "size": "30",
+      "style": "position:absolute;top:2px;right:5px;height:34px;width:34px;color:orange;"
+    },
+    {
+      "id": "app_trafficLight_pause",
+      "component": "IconButton",
+      "iconized": true,
+      "icon": "mdi-pause",
+      "size": "30",
+      "style": "position:absolute;top:2px;right:45px;height:34px;width:34px;color:orange;",
+      "invisible": "::(::Learning.TrafficLightView.isPlaying==true?'false':'true')"
+    },
+    {
+      "id": "app_trafficLight_play",
+      "component": "IconButton",
+      "iconized": true,
+      "icon": "mdi-play",
+      "size": "30",
+      "style": "position:absolute;top:2px;right:45px;height:34px;width:34px;color:orange;",
+      "invisible": "::(::Learning.TrafficLightView.isPlaying==true?'true':'false')"
+    },
+    {
+      "id": "app_trafficLight",
+      "component": "Section",
+      "subcomponent": "div",
+      "style": "margin:40px 5% 0px;max-height:calc(100vh - 60px - 30px);overflow:hidden auto;border-radius:30px;background-color:white;",
+      "items": [
+        {
+          "id": "app_trafficLight_red",
+          "component": "div",
+          "style":"::Learning.TrafficLightView.RedStyle"
+        },
+        {
+          "id": "app_trafficLight_yellow",
+          "component": "div",
+          "style":"::Learning.TrafficLightView.YellowStyle"
+        },
+        {
+          "id": "app_trafficLight_green",
+          "component": "div",
+          "style":"::Learning.TrafficLightView.GreenStyle"
+        }
+      ]
+    },
+    {
+      "id": "app_trafficLight_function",
+      "component": "Section",
+      "subcomponent": "div",
+      "style": "margin:30px 0px;",
+      "items": [
+        {
+          "id": "app_trafficLight_download",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][download_sourceCode]",
+          "style": "margin:30px 0px 0px calc((100% - 6.5em * 3 - 1em * 2) / 2);float:left;inline-size:6.5em;color:black;background:linear-gradient(90deg, #32a536 0%, #ffe94f 40%, #ff0000 100%);"
+        },
+        {
+          "id": "app_trafficLight_download_reversed",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][download_sourceCode]",
+          "style": "margin:30px 0px 0px 1em;float:left;inline-size:6.5em;color:black;background:linear-gradient(90deg, #ff0000 0%, #ffe94f 40%, #32a536 100%);"
+        },
+        {
+          "id": "app_trafficLight_upload",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][upload_sourceCode]",
+          "color": "yellow accent-4",
+          "style": "margin:30px 0px 0px 1em;float:left;inline-size:6.5em;"
+        },
+        {
+          "id": "app_trafficLight_note",
+          "component": "RichText",
+          "content": "::Learning.Language[::Language][down_sourceCode_note]",
+          "style": "clear:both;padding:30px 5% 0px calc(5% + 1em);text-align:left;text-indent: -1em;"
+        },
+        {
+          "component": "input",
+          "id": "app_trafficLight_pick_file",
+          "type": "file",
+          "invisible": "true",
+          "accept": ".scxml",
+          "multiple": false
+        }
+      ]
+    }
+  ],
+  "methodList": [
+    {
+      "component": "Section",
+      "functionName": "handleClick",
+      "functionValue": "../Learning/TrafficLight/js/Section_handleClick.js"
+    },
+    {
+      "component": "Section",
+      "functionName": "handleChanged",
+      "functionValue": "../Learning/TrafficLight/js/Section_handleChanged.js"
+    }
+  ]
+}

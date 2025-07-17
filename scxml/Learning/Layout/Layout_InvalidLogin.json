@@ -1,0 +1,27 @@
+{
+	"background": {
+		"style": "background-size:contain;margin:auto;max-width:1080px;background-color:white;"
+	},
+	"layout": [
+		{
+			"id": "content",
+			"component": "p",
+			"style": "font-size:xx-large;text-align:center;margin:200px 5% 150px;",
+			"content": "此帳號目前無登錄權限，請洽管理人員"
+		},
+		{
+			"description": "GoBack",
+			"id": "go_back",
+			"component": "v-btn",
+			"color": "primary",
+			"class": "btn-home",
+			"content": "回首頁"
+		},
+		{
+			"description": "Footer",
+			"id": "main-footer",
+			"component": "Footer",
+			"content": "Learning"
+		}
+	]
+}

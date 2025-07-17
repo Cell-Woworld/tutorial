@@ -1,0 +1,51 @@
+syntax = "proto3";
+package Learning;
+
+message GetRightNow
+{
+	message Result
+	{
+		string rightNow = 1;
+	}
+}
+
+message GetExampleList
+{
+	string exampleId				= 1;
+	string startTime			= 2;
+	string endTime				= 3;
+	bool isAvailableOnly	= 4;
+	string ownerId 				= 5;
+	message Result
+	{
+		string exampleId			= 1;
+		string exampleName		= 2;
+		string startTime		= 3;
+		string endTime			= 4;
+		string content			= 5;
+		int32 isAvailable		= 6;
+		string ownerId			= 7;
+		string ownerAccount = 8;
+		string ownerName		= 9;
+	}
+}
+
+message CreateExample
+{
+	string exampleId			= 1;
+	string exampleName		= 2;
+	string startTime		= 3;
+	string endTime			= 4;
+	string content			= 5;
+	string ownerId			= 6;
+}
+
+message UpdateExample
+{
+	string exampleId			= 1;
+	string exampleName		= 2;
+	string startTime		= 3;
+	string endTime			= 4;
+	string content			= 5;
+	int32 isAvailable		= 6;
+}

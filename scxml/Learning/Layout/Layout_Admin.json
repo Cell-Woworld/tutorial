@@ -1,0 +1,39 @@
+{
+  "layout": [
+    {
+      "id": "admin_container",
+      "component": "Container",
+      "subcomponent": "div",
+      "style": "height:94vh;",
+      "items": "::(::Learning.LayoutTemplate.appMainRoot)"
+    },
+    {
+      "description": "Generic Dialog",
+      "id": "generic_dialog",
+      "alt": "::Learning.LayoutTemplate.Dialog.uuid",
+      "component": "Dialog",
+      "invisible": "::(::Learning.LayoutTemplate.appShowDialog==false)",
+      "style": "display:flow-root;",
+      "class": "::Learning.LayoutTemplate.appDialogClass",
+      "maxWidth": "80%",
+      "items": "::(::Learning.LayoutTemplate.appDialogRoot)"
+    },
+    {
+      "id": "app_dialog_messagebox",
+      "description": "something wrong when modifying a event",
+      "component": "OK",
+      "class": "list-menu-title",
+      "content": "{\"question\":\"\", \"ok\":\"::Learning.Language[::Language][close]\"}",
+      "style": "text-align:center;"
+    },
+    {
+      "description": "Footer",
+      "id": "main-footer",
+      "component": "Footer",
+      "style": "text-align:center;position:fixed;top:94vh;left:0vw;width:100vw;",
+      "content": "::Learning.Language[::Language][system_shortname]"
+    }
+  ],
+  "userData": "::(::Learning.LayoutTemplate.userData)",
+  "methodList": "::(::Learning.LayoutTemplate.methodList)"
+}

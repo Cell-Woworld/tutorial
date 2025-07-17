@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_UpdateExpiredDate" qt:editorversion="4.13.1">
+    <state id="CallSP_UpdateExpiredDate">
+        <qt:editorinfo scenegeometry="324.22;239.96;-12.52;-137.44;702.18;777.83" geometry="324.22;239.96;-336.74;-377.40;702.18;777.83"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo scenegeometry="375.63;263.10;75.81;-38.31;505.82;528.98" geometry="51.41;23.14;-299.82;-301.41;505.82;528.98"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.UpdateExpiredDate" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_CallSP_UpdateExpiredDate">
+                <qt:editorinfo startTargetFactors="53.21;97.33"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo scenegeometry="425.70;71.66;282.57;21.66;120;100" geometry="138.10;-179.67;-143.13;-50;120;100"/>
+                <transition type="internal" event="PROJECT_NAME.UpdateExpiredDate" target="UpdateExpiredDate.Running" cond="::Database.CallSP.gateOpen">
+                    <assign location="Database.CallSP.gateOpen" expr="false"/>
+                </transition>
+            </state>
+            <state id="UpdateExpiredDate.Running" initial="AssignParameters">
+                <qt:editorinfo scenegeometry="375.63;263.10;304.81;152.56;251;318.11" geometry="0;0;-70.82;-110.54;251;318.11"/>
+                <state id="CallStoredProcedure">
+                    <qt:editorinfo scenegeometry="342.57;388.90;257.07;338.90;171;100" geometry="54.97;137.57;-85.50;-50;171;100"/>
+                    <onentry>
+                        <send event="Database.CallStoredProc">
+                            <param name="show_result" expr="true"/>
+                            <param name="name" expr="PROJECT_NAME.UpdateExpiredDate"/>
+                        </send>
+                    </onentry>
+                    <transition type="external" event="Database.Task.Done.PROJECT_NAME.UpdateExpiredDate" target="CallSP">
+                        <qt:editorinfo endTargetFactors="96.57;81.78"/>
+                    </transition>
+                </state>
+                <state id="AssignParameters">
+                    <qt:editorinfo scenegeometry="400.95;251.47;265.57;201.47;154;100" geometry="113.35;0.14;-135.38;-50;154;100"/>
+                    <onentry>
+                        <assign location="PROJECT_NAME.User.*" expr="::PROJECT_NAME.UpdateExpiredDate.*"/>
+                    </onentry>
+                    <transition type="external" target="CallStoredProcedure"/>
+                </state>
+                <onexit>
+                    <assign location="Database.CallSP.gateOpen" expr="true"/>
+                </onexit>
+            </state>
+            <transition type="internal" event="PROJECT_NAME.UpdateExpiredDate">
+                <assign location="Database.WaitForCall.name" expr="PROJECT_NAME.UpdateExpiredDate"/>
+                <raise event="Database.WaitForCall"/>
+            </transition>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="175.08;570.39;69.08;520.39;166;100" geometry="-149.14;330.43;-106;-50;166;100"/>
+            <transition type="external" target="Final_CallSP_UpdateExpiredDate"/>
+        </state>
+    </state>
+    <final id="Final_CallSP_UpdateExpiredDate">
+        <qt:editorinfo scenegeometry="342.57;689.80;322.57;669.80;40;40" geometry="342.57;689.80;-20;-20;40;40"/>
+    </final>
+</scxml>

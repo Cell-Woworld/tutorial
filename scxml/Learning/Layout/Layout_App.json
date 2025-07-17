@@ -1,0 +1,47 @@
+{
+  "background": {
+    "style": "position:fixed;top:0px;left:0px;width:100vw;height:100vh;background-size:contain;margin:auto;"
+  },
+  "layout": [
+    {
+      "id": "::Learning.LayoutTemplate.uuid",
+      "component": "Container",
+      "subcomponent": "div",
+      "style": "position:relative;margin:auto;top:0px;border-color:transparent;max-height:92vh;height:92vh;background-color:transparent;max-width:::Learning.Global.const[WEB_MAX_WIDTH]px;overflow:hidden;",
+      "items": "::(::Learning.LayoutTemplate.appMainRoot)"
+    },
+    {
+      "description": "Generic Dialog",
+      "id": "generic_dialog",
+      "alt": "::Learning.LayoutTemplate.Dialog.uuid",
+      "component": "Dialog",
+      "invisible": "::(::Learning.LayoutTemplate.appShowDialog==false)",
+      "style": "display:flow-root;",
+      "class": "::Learning.LayoutTemplate.appDialogClass",
+      "items": "::(::Learning.LayoutTemplate.appDialogRoot)"
+    },
+    {
+      "class": "list-menu-title",
+      "component": "OK",
+      "content": "{\"question\":\"\", \"ok\":\"::Learning.Language[::Language][close]\"}",
+      "id": "app_dialog_messagebox",
+      "invisible": "true",
+      "style": "text-align:center;"
+    },
+    {
+      "id": "app_waiting_note",
+      "component": "Dialog",
+      "invisible": "true",
+      "style": "background-color:#00000060;;display:block;height:250px;font-size:40px;-webkit-box-pack:center;-ms-flex-pack:center;justify-content:center;border-radius:20px;",
+      "items": [
+        {
+          "id": "waiting_content",
+          "component": "div",
+          "class": "reading auto-rotate",
+          "style": "margin-top:auto;"
+        }
+      ]
+    }
+  ],
+  "methodList": "::(::Learning.LayoutTemplate.methodList)"
+}

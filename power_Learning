@@ -1,0 +1,14 @@
+#!/bin/bash
+if [ "$1" = "up" ]
+then
+    lnid="$(docker network create -d bridge --gateway 10.6.0.1 --subnet 10.6.0.0/16 br1)"
+    docker-compose -f ~/Projects/Learning/Learning.yml $*
+elif [ "$1" = "down" ]
+then
+    lnid="$(docker network ls | grep br1)"
+    docker-compose -f ~/Projects/Learning/Learning.yml $*
+    docker network rm br1 1> /dev/null
+else
+    docker-compose -f ~/Projects/Learning/Learning.yml $*
+fi
+

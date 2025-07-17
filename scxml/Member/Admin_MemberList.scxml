@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="Member" qt:editorversion="7.0.0">
+    <state id="Member">
+        <qt:editorinfo geometry="581.75;-728.33;-485.13;770.61;1171.17;832.26" scenegeometry="581.75;-728.33;96.62;42.28;1171.17;832.26"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="Member.LoadFileIO">
+            <qt:editorinfo geometry="101.50;910.55;-85.50;-50;171;100" scenegeometry="563.27;176.69;477.77;126.69;171;100"/>
+            <onentry>
+                <script>Bio.Cell.NewRNA({&quot;name&quot;:&quot;FileIO&quot;})</script>
+            </onentry>
+            <transition type="external" target="Member.Running" cond="::return.Bio.Cell.NewRNA"/>
+        </state>
+        <transition type="external" event="Bio.Cell.Destroyed" target="Final_1"/>
+        <state id="Member.Running">
+            <qt:editorinfo geometry="314.51;1033.38;-764.60;-48.07;1116.13;558.18" scenegeometry="776.28;299.52;11.68;251.45;1116.13;558.18"/>
+            <onentry>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;../Member/Member.proto&quot;})</script>
+                <script>Bio.Chromosome.AddProto({&quot;filename&quot;:&quot;../Member/Member_client.proto&quot;})</script>
+            </onentry>
+            <onexit>
+                <assign location="PROJECT_NAME.LayoutTemplate.Tab[Tab_Member]" expr="[]"/>
+            </onexit>
+            <transition type="internal" event="ShowUI">
+                <assign location="PROJECT_NAME.LayoutTemplate.Tab[Tab_Member]" expr="::PROJECT_NAME.LayoutTemplate.content[layout]"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.appMainRoot" expr="::PROJECT_NAME.LayoutTemplate.tabs[layout]"/>
+                <assign location="PROJECT_NAME.LayoutTemplate.methodList" expr="::PROJECT_NAME.LayoutTemplate.content[methodList]"/>
+                <send event="VuetifyKits.Send">
+                    <param name="view" expr="::PROJECT_NAME.LayoutTemplate.layout"/>
+                    <param name="show_result" expr="false"/>
+                </send>
+            </transition>
+            <state id="Admin.MaintainMember">
+                <qt:editorinfo geometry="59.29;56.48;-702.89;-31.06;926.87;436.48" scenegeometry="606.53;420.46;-96.36;389.40;926.87;436.48"/>
+                <invoke id="GetMemberList" src="./DB/CallSP_GetMemberList.scxml"/>
+                <onentry>
+                    <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_MemberList.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.content&quot;})</script>
+                </onentry>
+                <state id="Admin.Member.Init">
+                    <qt:editorinfo geometry="-305.64;75.01;-243.99;-39.88;167;100" scenegeometry="300.89;495.47;56.90;455.59;167;100"/>
+                    <onentry>
+                        <assign location="PROJECT_NAME.MemberView.list" expr="[]"/>
+                        <assign location="PROJECT_NAME.MemberView.map" expr="{}"/>
+                        <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                        <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                        <send event="ShowUI"/>
+                    </onentry>
+                    <transition type="external" target="Admin.Member.GetMemberList"/>
+                </state>
+                <state id="Admin.Member.GetMemberList">
+                    <qt:editorinfo geometry="182.03;168.06;-398;-52.75;418;212.50" scenegeometry="788.56;588.52;390.56;535.77;418;212.50"/>
+                    <invoke id="UpdateMember" src="../Member/DB/CallSP_UpdateMember.scxml"/>
+                    <onentry>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_MemberList_Items.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.helper&quot;})</script>
+                        <send event="RefreshMemberList"/>
+                    </onentry>
+                    <transition type="internal" event="RefreshMemberList" cond="::PROJECT_NAME.MemberView.list[].length &gt; 0">
+                        <assign location="PROJECT_NAME.MemberView.list" expr="[]"/>
+                        <assign location="PROJECT_NAME.MemberView.map" expr="{}"/>
+                        <send event="PROJECT_NAME.GetMemberList">
+                            <param name="account" expr="::PROJECT_NAME.MemberView.account"/>
+                            <param name="userName" expr="::PROJECT_NAME.MemberView.userName"/>
+                            <param name="daysToBeExipred" expr="-1"/>
+                            <param name="isAvailableOnly" expr="false"/>
+                        </send>
+                    </transition>
+                    <transition type="internal" event="PROJECT_NAME.Client.GetMemberList">
+                        <assign location="PROJECT_NAME.MemberView.*" expr="::PROJECT_NAME.Client.GetMemberList.*"/>
+                        <assign location="PROJECT_NAME.MemberView.list" expr="[]"/>
+                        <assign location="PROJECT_NAME.MemberView.map" expr="{}"/>
+                        <send event="PROJECT_NAME.GetMemberList">
+                            <param name="account" expr="::PROJECT_NAME.MemberView.account"/>
+                            <param name="userName" expr="::PROJECT_NAME.MemberView.userName"/>
+                            <param name="daysToBeExipred" expr="-1"/>
+                            <param name="isAvailableOnly" expr="false"/>
+                        </send>
+                    </transition>
+                    <transition type="internal" event="PROJECT_NAME.GetMemberList.Result">
+                        <assign location="PROJECT_NAME.MemberView.list[]" expr="::PROJECT_NAME.LayoutTemplate.helper[admin_member_list_item]"/>
+                        <assign location="PROJECT_NAME.MemberView.map[::PROJECT_NAME.GetMemberList.Result.userId][*]" expr="::PROJECT_NAME.GetMemberList.Result.*"/>
+                    </transition>
+                    <transition type="internal" event="Database.Task.Done.PROJECT_NAME.GetMemberList">
+                        <send event="ShowUI"/>
+                    </transition>
+                    <transition type="external" event="Generic.Client.Clicked" target="Admin.Member.Detail" cond="::Generic.Client.Clicked.id=&quot;admin_member_modify&quot; &amp;&amp; ::Generic.Client.Clicked.content≠''">
+                        <assign location="PROJECT_NAME.MemberView.userId" expr="::Generic.Client.Clicked.content"/>
+                    </transition>
+                </state>
+                <state id="Admin.Member.Detail">
+                    <qt:editorinfo geometry="-286.89;258.65;-396;-50;416;146" scenegeometry="319.64;679.11;-76.36;629.11;416;146"/>
+                    <invoke id="UpdateMember" src="../Member/DB/CallSP_UpdateMember.scxml"/>
+                    <onentry>
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;./Layout/Layout_Admin_MemberCreate_Items.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.LayoutTemplate.helper&quot;})</script>
+                        <send event="PROJECT_NAME.GetMemberList">
+                            <param name="userId" expr="::PROJECT_NAME.MemberView.userId"/>
+                            <param name="daysToBeExipred" expr="-1"/>
+                        </send>
+                    </onentry>
+                    <onexit>
+                        <assign location="PROJECT_NAME.UpdateMemberView.*"/>
+                        <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="false"/>
+                        <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="[]"/>
+                        <send event="ShowUI"/>
+                    </onexit>
+                    <transition type="internal" event="PROJECT_NAME.GetMemberList.Result">
+                        <assign location="PROJECT_NAME.UpdateMemberView.*" expr="::PROJECT_NAME.GetMemberList.Result.*"/>
+                    </transition>
+                    <transition type="internal" event="Database.Task.Done.PROJECT_NAME.GetMemberList">
+                        <assign location="PROJECT_NAME.LayoutTemplate.appShowDialog" expr="true"/>
+                        <assign location="PROJECT_NAME.LayoutTemplate.appDialogRoot" expr="::PROJECT_NAME.LayoutTemplate.helper[createMemberLayout]"/>
+                        <send event="ShowUI"/>
+                    </transition>
+                    <transition type="internal" event="Generic.Client.Clicked" cond="::Generic.Client.Clicked.id=admin_member_create_cancel" target="Admin.Member.GetMemberList">
+                        <qt:editorinfo endTargetFactors="40.03;83.19" startTargetFactors="85.93;69.33"/>
+                    </transition>
+                    <transition type="external" event="PROJECT_NAME.Client.UpdateMember">
+                        <script>FileIO.Read({&quot;filename&quot;:&quot;../Member/Command/Command_Admin_Member.json&quot;,&quot;target&quot;:&quot;PROJECT_NAME.CommandTemplate.memberHelper&quot;})</script>
+                        <assign location="PROJECT_NAME.UpdateMemberView.*" expr="::PROJECT_NAME.Client.UpdateMember.*"/>
+                        <assign location="PROJECT_NAME.UpdateMemberView.userId" expr="::PROJECT_NAME.MemberView.userId"/>
+                        <send event="PROJECT_NAME.UpdateMember">
+                            <param name="@payload" expr="::PROJECT_NAME.CommandTemplate.memberHelper[UpdateMember]"/>
+                        </send>
+                    </transition>
+                    <transition type="external" event="Database.Task.Done.PROJECT_NAME.UpdateMember" target="Admin.Member.GetMemberList"/>
+                </state>
+            </state>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="1307.32;458.41;-20;-20;40;40" scenegeometry="1307.32;458.41;1287.32;438.41;40;40"/>
+    </final>
+</scxml>

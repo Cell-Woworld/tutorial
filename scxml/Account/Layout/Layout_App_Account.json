@@ -1,0 +1,109 @@
+{
+	"layout": [
+		{
+			"id": "app_main_menu",
+			"component": "Section",
+			"subcomponent": "div",
+			"style": "margin:20px 3% 0px;max-width:94%;max-height:80vh;min-height:80vh;height:80vh;overflow:auto;",
+			"items": [
+				{
+					"component": "div",
+					"id": "app_account_title",
+					"content": "::Learning.Language[::Language][app_account_title]",
+					"style": "margin:50px 5% 10px;font-size:xx-large;text-align:center;"
+				},
+				{
+					"id": "app_account_profile_icon",
+					"component": "v-icon",
+					"content": "mdi-account-cog-outline",
+					"style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+				},
+				{
+					"component": "div",
+					"id": "app_account_profile_label",
+					"style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+					"content": "::Learning.Language[::Language][app_account_profile]"
+				},
+				{
+					"id": "app_account_profile",
+					"component": "v-icon",
+					"content": "mdi-chevron-right",
+					"style": "margin:35px 5% 10px 0px;float:right;"
+				},
+				{
+					"component": "v-divider",
+					"id": "function1_function1_divider",
+					"style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+				},
+				{
+					"id": "app_account_point_icon",
+					"component": "v-icon",
+					"content": "mdi-star-circle",
+					"style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+				},
+				{
+					"component": "div",
+					"id": "app_account_point_label",
+					"style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+					"content": "::Learning.Language[::Language][title_point]"
+				},
+				{
+					"id": "app_account_point",
+					"component": "v-icon",
+					"content": "mdi-chevron-right",
+					"style": "margin:35px 5% 10px 0px;float:right;"
+				},
+				{
+					"component": "v-divider",
+					"id": "function1_function2_divider",
+					"style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+				},
+				{
+					"id": "show_version_icon",
+					"component": "v-icon",
+					"content": "mdi-dots-horizontal-circle-outline",
+					"style": "clear:both;margin:32px calc(5% + 3px) 10px;float:left;font-size:xx-large;"
+				},
+				{
+					"component": "div",
+					"id": "show_version_label",
+					"style": "margin:35px 0px 10px 0px;font-size:larger;font-weight:bold;float:left;width:calc(100% - 65px - 15%)",
+					"content": "::Learning.Language[::Language][app_account_version]"
+				},
+				{
+					"id": "show_version",
+					"component": "v-icon",
+					"content": "mdi-chevron-right",
+					"style": "margin:35px 5% 10px 0px;float:right;"
+				},
+				{
+					"component": "v-divider",
+					"id": "function4_function3_divider",
+					"style": "clear:both;margin:0px 5% 0px calc(5% + 3px);"
+				}
+			]
+		},
+    {
+      "id": "go_back",
+			"component": "v-icon",
+			"content": "mdi-chevron-left",
+      "style":"position:absolute;top:0vh;left:0%;margin:5px 0px;font-size:6vh;text-align:left;color:lightsteelblue;"
+    },
+		{
+			"description": "Version Information Dialog",
+			"id": "app_version_info",
+			"component": "OK",
+			"label": "::Learning.Language[::Language][version]",
+			"class": "list-menu-title",
+			"style": "text-align:center;padding:0px;",
+			"content": "{\"question\":\"\", \"ok\":\"::Learning.Language[::Language][close]\"}"
+		}
+	],
+	"methodList": [
+		{
+			"component": "Section",
+			"functionName": "handleClick",
+			"functionValue": "../Account/js/Section_handleClick.js"
+		}
+	]
+}

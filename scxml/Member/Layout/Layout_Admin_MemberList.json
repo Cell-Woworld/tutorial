@@ -1,0 +1,85 @@
+{
+  "layout": [
+    {
+      "id": "::Learning.LayoutTemplate.uuid",
+      "component": "Section",
+      "subcomponent": "div",
+      "description": "A container for updating scripts",
+      "items": [
+        {
+          "component": "v-text-field",
+          "id": "admin_member_account",
+          "label": "::Learning.Language[::Language][title_account]",
+          "value": "::Learning.MemberView.account",
+          "style": "margin:10px 0px 0px 1%;min-width:250px;float:left;"
+        },
+        {
+          "component": "v-text-field",
+          "id": "admin_member_userName",
+          "label": "::Learning.Language[::Language][title_userName]",
+          "value": "::Learning.MemberView.userName",
+          "style": "margin:10px 0px 0px 1%;min-width:250px;float:left;"
+        },
+        {
+          "id": "admin_member_query",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][query]",
+          "color": "primary",
+          "class": "btn-left-align"
+        },
+        {
+          "id": "admin_member_list",
+          "component": "Editable_DataTable",
+          "style": "clear:both;padding:20px 1%;min-width:120px;min-height:calc(94vh - 130px);max-height:calc(94vh - 130px);height:calc(94vh - 130px);overflow:auto;",
+          "dataTable": {
+            "pageSize": "20",
+            "headers": [
+              {
+                "text": "::Learning.Language[::Language][title_userName]",
+                "value": "userName"
+              },
+              {
+                "text": "::Learning.Language[::Language][title_account]",
+                "value": "account"
+              },
+              {
+                "text": "::Learning.Language[::Language][admin_member_effectiveDate]",
+                "value": "effectiveDate"
+              },
+              {
+                "text": "::Learning.Language[::Language][admin_member_expiredDate]",
+                "value": "expiredDate"
+              },
+              {
+                "text": "::Learning.Language[::Language][app_member_authority]",
+                "value": "authority"
+              },
+              {
+                "text": "",
+                "value": "detail"
+              }
+            ],
+            "recordset": "::(::Learning.MemberView.list)"
+          }
+        }
+      ]
+    }
+  ],
+  "methodList": [
+    {
+      "component": "Section",
+      "functionName": "handleClick",
+      "functionValue": "../Member/js/admin/Section_handleClick.js"
+    },
+    {
+      "component": "Section_L2",
+      "functionName": "handleClick",
+      "functionValue": "../Member/js/admin/Section_L2_handleClick.js"
+    },
+    {
+      "component": "DialogCard",
+      "functionName": "handleClick",
+      "functionValue": "../Member/js/admin/DialogCard_handleClick.js"
+    }
+  ]
+}

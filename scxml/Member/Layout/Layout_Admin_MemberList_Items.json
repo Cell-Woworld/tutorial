@@ -1,0 +1,22 @@
+{
+  "admin_member_list_item": {
+    "text_list": [0,1,2,3,4],
+    "section_list": [5],
+    "userId":"::Learning.GetMemberList.Result.userId",
+    "userName":"::Learning.GetMemberList.Result.userName",
+    "account":"::Learning.GetMemberList.Result.account",
+    "effectiveDate":"::('::Learning.GetMemberList.Result.effectiveDate'=='1980-01-01'?'N/A':'::Learning.GetMemberList.Result.effectiveDate')",
+    "expiredDate":"::('::Learning.GetMemberList.Result.expiredDate'=='1980-01-01'?'N/A':'::Learning.GetMemberList.Result.expiredDate')",
+    "authority":"::Learning.Language[::Language][admin_member_::Learning.Account.const[AUTHORITY_NAME][::Learning.GetMemberList.Result.authority]]",
+    "detail": {
+      "subcomponent": "div",
+      "items": [
+        {
+          "component": "v-btn",
+          "id":"admin_member_modify",
+          "content": "::Learning.Language[::Language][modify]"
+        }
+      ]
+    }
+  }
+}

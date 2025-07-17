@@ -1,0 +1,8 @@
+{
+  "GreenLight": "margin:30px auto;color:green;border-radius:50%;border-style:solid;width:6em;height:6em;background-color:green;",
+  "GreenDark": "margin:30px auto;color:green;border-radius:50%;border-style:solid;width:6em;height:6em;background-color:transparent;",
+  "YellowLight": "margin:30px auto;color:yellow;border-radius:50%;border-style:solid;width:6em;height:6em;background-color:yellow;",
+  "YellowDark": "margin:30px auto;color:yellow;border-radius:50%;border-style:solid;width:6em;height:6em;background-color:transparent;",
+  "RedLight": "margin:30px auto;color:red;border-radius:50%;border-style:solid;width:6em;height:6em;background-color:red;",
+  "RedDark": "margin:30px auto;color:red;border-radius:50%;border-style:solid;width:6em;height:6em;background-color:transparent;"
+}

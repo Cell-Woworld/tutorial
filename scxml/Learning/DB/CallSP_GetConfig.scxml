@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="CallSP_GetConfig" qt:editorversion="4.13.2">
+    <state id="CallSP_GetConfig">
+        <qt:editorinfo geometry="213.43;403.90;-180.52;-373.23;697.07;431.97" scenegeometry="213.43;403.90;32.91;30.67;697.07;431.97"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CallSP" initial="Standby">
+            <qt:editorinfo geometry="-70.39;11.37;-81.14;-318.68;648.08;181.91" scenegeometry="181.93;472.58;100.79;153.90;648.08;181.91"/>
+            <transition type="external" event="Database.Error.PROJECT_NAME.GetConfig" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_1">
+                <qt:editorinfo startTargetFactors="79.58;96.49"/>
+            </transition>
+            <state id="Standby">
+                <qt:editorinfo geometry="308.06;-214.94;-143.13;-50;120;100" scenegeometry="489.99;257.64;346.86;207.64;120;100"/>
+                <transition type="external" event="PROJECT_NAME.GetConfig" target="CallStoredProcedure" cond="::Database.CallSP.gateOpen">
+                    <assign location="Database.CallSP.gateOpen" expr="false"/>
+                    <assign location="PROJECT_NAME.Config.*" expr="::PROJECT_NAME.GetConfig.*"/>
+                </transition>
+            </state>
+            <transition type="internal" event="PROJECT_NAME.GetConfig">
+                <assign location="Database.WaitForCall.name" expr="PROJECT_NAME.GetConfig"/>
+                <raise event="Database.WaitForCall"/>
+            </transition>
+            <state id="CallStoredProcedure">
+                <qt:editorinfo geometry="426.40;-214.20;-85.50;-50;171;100" scenegeometry="656.44;197.15;570.94;147.15;171;100"/>
+                <onentry>
+                    <send event="Database.CallStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.GetConfig"/>
+                        <param expr="PROJECT_NAME.GetConfig.Result" name="callback_message"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.PROJECT_NAME.GetConfig" target="CallSP">
+                    <qt:editorinfo endTargetFactors="98.56;57.51"/>
+                </transition>
+                <onexit>
+                    <assign location="Database.CallSP.gateOpen" expr="true"/>
+                </onexit>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="29.46;-29.99;-83;-50;120;100" scenegeometry="281.78;431.22;198.78;381.22;120;100"/>
+            <transition type="external" target="Final_1"/>
+        </state>
+    </state>
+    <final id="Final_1">
+        <qt:editorinfo geometry="381.45;538.58;-20;-20;40;40" scenegeometry="381.45;538.58;361.45;518.58;40;40"/>
+    </final>
+</scxml>

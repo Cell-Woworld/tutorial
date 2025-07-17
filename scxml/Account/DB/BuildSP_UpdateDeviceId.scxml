@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_UpdateDeviceId" qt:editorversion="4.11.1">
+    <state id="BuildSP_UpdateDeviceId">
+        <qt:editorinfo scenegeometry="319.09;243.81;100.33;-0.69;829.03;573.28" geometry="319.09;243.81;-218.76;-244.50;829.03;573.28"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo scenegeometry="278.29;278.17;152.04;93.14;660.63;324.69" geometry="-40.80;34.36;-126.25;-185.03;660.63;324.69"/>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Update">
+                <qt:editorinfo scenegeometry="647.21;213.07;601.21;176.57;120;100" geometry="368.92;-65.10;-46;-36.50;120;100"/>
+                <onentry>
+                    <send event="Database.Update">
+                        <param name="model_list" expr="[PROJECT_NAME.User.deviceId]"/>
+                    </send>
+                    <send event="StartAddCond"/>
+                </onentry>
+                <transition type="external" event="StartAddCond" target="MatchUserId"/>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo scenegeometry="634.70;347.83;541.70;297.83;186;100" geometry="356.41;69.66;-93;-50;186;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.UpdateDeviceId"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.UpdateDeviceId"/>
+                        <param name="err_message" expr="Database.Error.Account.UpdateDeviceId"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.*" target="Final_BuildSP_UpdateDeviceId"/>
+            </state>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_BuildSP_UpdateDeviceId"/>
+            <state id="Setup">
+                <qt:editorinfo scenegeometry="232.04;223.21;172.04;173.21;120;100" geometry="-46.25;-54.96;-60;-50;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Preparing">
+                    <qt:editorinfo movePoint="24.37;1.28"/>
+                </transition>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="MatchUserId">
+                <qt:editorinfo scenegeometry="336.34;346.64;276.34;296.64;120;100" geometry="58.05;68.47;-60;-50;120;100"/>
+                <transition type="external" target="CreateStoredProcedure" event="StartBuild">
+                    <qt:editorinfo endTargetFactors="28.91;49.05" startTargetFactors="78.42;54.56"/>
+                </transition>
+                <onentry>
+                    <send event="Database.AddCond">
+                        <param name="var1" expr="PROJECT_NAME.User.userId"/>
+                        <param name="op" expr="="/>
+                        <param name="var2" expr="::PROJECT_NAME.User.userId"/>
+                    </send>
+                    <send event="StartBuild"/>
+                </onentry>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="447.93;225.92;387.93;175.92;120;100" geometry="169.64;-52.25;-60;-50;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.User.deviceId]"/>
+                        <param name="alias" expr="DeviceId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.User.deviceId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.User.userId]"/>
+                        <param name="alias" expr="UserId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.User.userId"/>
+                    </send>
+                    <send event="Prepared"/>
+                </onentry>
+                <transition type="external" event="Prepared" target="Update"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="473.08;502.59;367.08;452.59;166;100" geometry="153.99;258.78;-106;-50;166;100"/>
+            <transition type="external" target="Final_BuildSP_UpdateDeviceId"/>
+        </state>
+    </state>
+    <final id="Final_BuildSP_UpdateDeviceId">
+        <qt:editorinfo scenegeometry="643.99;681.58;623.99;661.58;40;40" geometry="643.99;681.58;-20;-20;40;40"/>
+    </final>
+</scxml>

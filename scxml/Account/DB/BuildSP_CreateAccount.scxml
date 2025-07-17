@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="BuildSP_CreateAccount" qt:editorversion="4.11.1">
+    <state id="BuildSP_CreateAccount">
+        <qt:editorinfo scenegeometry="316.96;240.74;132.03;15.91;662.22;553.91" geometry="316.96;240.74;-184.93;-224.83;662.22;553.91"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="Setup">
+            <qt:editorinfo scenegeometry="262.48;263.36;152.03;106.71;594.35;321.39" geometry="-54.48;22.62;-110.45;-156.65;594.35;321.39"/>
+            <invoke src="./DB/Database/Database.scxml" id="database" autoforward="true"/>
+            <state id="Insert">
+                <qt:editorinfo scenegeometry="275.71;344.60;229.71;308.10;120;100" geometry="13.23;81.24;-46;-36.50;120;100"/>
+                <onentry>
+                    <send event="Database.Insert">
+                        <qt:editorinfo geometry="56.95;57.99;0;0;0;0"/>
+                        <param name="model_list" expr="[PROJECT_NAME.User.userId, PROJECT_NAME.User.deviceId, PROJECT_NAME.User.account, PROJECT_NAME.User.password, PROJECT_NAME.User.lastSessionId, PROJECT_NAME.User.lastActionTime, PROJECT_NAME.User.authority, PROJECT_NAME.User.userName, PROJECT_NAME.User.email]"/>
+                    </send>
+                    <send event="StartBuild">
+                        <qt:editorinfo geometry="86.95;87.99;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" target="CreateStoredProcedure" event="StartBuild">
+                    <qt:editorinfo endTargetFactors="28.91;49.05"/>
+                </transition>
+            </state>
+            <state id="CreateStoredProcedure">
+                <qt:editorinfo scenegeometry="603.04;354.42;510.04;304.42;186;100" geometry="340.56;91.06;-93;-50;186;100"/>
+                <onentry>
+                    <send event="Database.CreateStoredProc">
+                        <param name="show_result" expr="true"/>
+                        <param name="name" expr="PROJECT_NAME.CreateAccount"/>
+                        <param name="done_message" expr="Database.Task.Done.Account.CreateAccount"/>
+                        <param name="err_message" expr="Database.Error.Account.CreateAccount"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Database.Task.Done.*" target="Final_BuildSP_CreateAccount"/>
+            </state>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_BuildSP_CreateAccount"/>
+            <state id="Setup">
+                <qt:editorinfo scenegeometry="232.03;226.83;172.03;176.83;120;100" geometry="-30.45;-36.53;-60;-50;120;100"/>
+                <transition type="external" event="Database.Setup.Successfully" target="Preparing">
+                    <qt:editorinfo movePoint="24.37;1.28"/>
+                </transition>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Setup">
+                        <param expr="::Database.Driver" name="driver"/>
+                        <param name="server" expr="::Database.Server"/>
+                        <param name="port" expr="::Database.Port"/>
+                        <param name="database" expr="::Database.Name"/>
+                        <param name="uid" expr="::Database.UID"/>
+                        <param name="pwd" expr="::Database.Password"/>
+                    </send>
+                </onentry>
+            </state>
+            <state id="Preparing">
+                <qt:editorinfo scenegeometry="409.16;226.80;349.16;176.80;120;100" geometry="146.68;-36.56;-60;-50;120;100"/>
+                <onentry>
+                    <send event="Database.Function">
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.User.deviceId]"/>
+                        <param name="alias" expr="DeviceId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.User.deviceId"/>
+                    </send>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="150.63;37.85;0;0;0;0"/>
+                        <param expr="UTC_NOW" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="RightNow"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.User.lastActionTime"/>
+                    </send>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="25;61;0;0;0;0"/>
+                        <param expr="UUID" name="name"/>
+                        <param name="parameters" expr="[]"/>
+                        <param name="alias" expr="NewUUID"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.BuildSP_CreateAccount.NewUUID"/>
+                    </send>
+                    <send event="Prepared">
+                        <qt:editorinfo geometry="55;91;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Prepared" target="Preparing2"/>
+            </state>
+            <state id="Preparing2">
+                <qt:editorinfo scenegeometry="601.62;228.50;541.62;178.50;120;100" geometry="339.14;-34.86;-60;-50;120;100"/>
+                <onentry>
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                    <send event="Database.Function">
+                        <qt:editorinfo geometry="90.63;-22.15;0;0;0;0"/>
+                        <param expr="UUID_TO_BIN" name="name"/>
+                        <param name="parameters" expr="[::PROJECT_NAME.BuildSP_CreateAccount.NewUUID]"/>
+                        <param name="alias" expr="UserId"/>
+                        <param name="target_model_name" expr="PROJECT_NAME.User.userId"/>
+                    </send>
+                    <assign location="PROJECT_NAME.User.lastSessionId" expr="::PROJECT_NAME.BuildSP_CreateAccount.NewUUID"/>
+                    <send event="Prepared">
+                        <qt:editorinfo geometry="85.78;259.06;0;0;0;0"/>
+                    </send>
+                </onentry>
+                <transition type="external" event="Prepared" target="Insert"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo scenegeometry="391.37;499.82;285.37;449.82;166;100" geometry="74.41;259.08;-106;-50;166;100"/>
+            <transition type="external" target="Final_BuildSP_CreateAccount">
+                <qt:editorinfo endTargetFactors="19.37;48.56"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_BuildSP_CreateAccount">
+        <qt:editorinfo scenegeometry="529.52;642.34;509.52;622.34;40;40" geometry="529.52;642.34;-20;-20;40;40"/>
+    </final>
+</scxml>

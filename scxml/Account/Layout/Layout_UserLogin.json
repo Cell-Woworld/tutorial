@@ -1,0 +1,85 @@
+{
+  "background":
+  {
+    "style": "background-size:contain;margin:auto;max-width:1080px;background-color:white;"
+  },
+  "layout": [
+    {
+      "component": "Dialog",
+      "description": "User login",
+      "id": "app_user_login",
+      "style": "display:flow-root;",
+      "invisible": false,
+      "items": [
+        {
+          "component": "div",
+          "content": "::Learning.Language[::Language][title_login_label]",
+          "id": "app_user_login_title",
+          "style": "text-align:center;font-size:xx-large;padding:40px 0px 20px;"
+        },
+        {
+          "component": "v-text-field",
+          "id": "app_user_login_account",
+          "label": "::Learning.Language[::Language][title_account]",
+          "style": "clear:left;padding:30px 5% 0px;min-width:50%;"
+        },
+        {
+          "component": "v-text-field",
+          "id": "app_user_login_password",
+          "label": "::Learning.Language[::Language][title_password]",
+          "style": "clear:left;padding:30px 5% 0px;min-width:50%;",
+          "type": "password"
+        },
+        {
+          "component": "v-checkbox",
+          "label": "::Learning.Language[::Language][title_auto_login]",
+          "description": "auto login",
+          "id": "app_user_autologin",
+          "invisible": "::('::Learning.LoginView.ClientParam.deviceId'!='' || '::Learning.LoginView.ClientParam.loginType'='admin')",
+          "style": "clear:both;margin:20px 0px 0px 5%;"
+        },
+        {
+          "color": "primary",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][title_login]",
+          "description": "login",
+          "id": "app_admin_login",
+          "invisible": "::('::Learning.LoginView.ClientParam.deviceId'≠'' || '::Learning.LoginView.ClientParam.loginType'≠'admin')",
+          "style": "clear:both;margin:30px 30% 20px;float:left;inline-size:40%;"
+        },
+        {
+          "color": "primary",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][title_login]",
+          "description": "login",
+          "id": "app_user_login",
+          "invisible": "::('::Learning.LoginView.ClientParam.deviceId'='' && '::Learning.LoginView.ClientParam.loginType'='admin')",
+          "style": "clear:both;margin:10px 0px 20px 20%;float:left;inline-size:25%;"
+        },
+        {
+          "color": "cyan accent-4 white--text",
+          "component": "v-btn",
+          "content": "::Learning.Language[::Language][title_register]",
+          "id": "app_user_register",
+          "invisible": "::('::Learning.LoginView.ClientParam.deviceId'='' && '::Learning.LoginView.ClientParam.loginType'='admin')",
+          "style": "margin:10px 0px 20px 10%;float:left;inline-size:25%;"
+        }
+      ]
+    },
+    {
+      "class": "list-menu-title",
+      "component": "OK",
+      "content": "{\"question\":\"\", \"ok\":\"::Learning.Language[::Language][close]\"}",
+      "description": "something wrong when modifying a event",
+      "id": "app_dialog_messagebox",
+      "style": "text-align:center;"
+    }
+  ],
+  "methodList": [
+    {
+      "component": "DialogCard",
+      "functionName": "handleClick",
+      "functionValue": "../Account/js/DialogCard_handleClick.js"
+    }
+  ]
+}

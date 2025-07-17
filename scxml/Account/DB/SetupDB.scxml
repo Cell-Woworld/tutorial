@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<scxml xmlns="http://www.w3.org/2005/07/scxml" version="1.0" binding="early" xmlns:qt="http://www.qt.io/2015/02/scxml-ext" name="SetupDB" qt:editorversion="7.0.0">
+    <state id="SetupDB" initial="CreateSP">
+        <qt:editorinfo geometry="332.23;120.43;-449;-168.11;1027.41;735.88" scenegeometry="332.23;120.43;-116.77;-47.68;1027.41;735.88"/>
+        <datamodel>
+            <data id="PROJECT_NAME" expr="::AppName"/>
+        </datamodel>
+        <state id="CreateSP" initial="CreateAccount">
+            <qt:editorinfo geometry="-137.80;222.74;-288.14;-294.27;984.35;469.35" scenegeometry="194.43;343.17;-93.71;48.90;984.35;469.35"/>
+            <transition type="external" event="Database.Error.*" target="error">
+                <qt:editorinfo endTargetFactors="50.43;26" startTargetFactors="66.04;95.94"/>
+            </transition>
+            <transition type="external" event="Bio.Cell.Destroyed" target="Final_SetupDB">
+                <qt:editorinfo startTargetFactors="49.58;97.89"/>
+            </transition>
+            <onentry>
+                <assign location="Bio.Cell.Model.DefaultReturnModelname" expr="true"/>
+            </onentry>
+            <state id="Login">
+                <qt:editorinfo geometry="90.75;-166.33;-141;-50;130;100" scenegeometry="285.18;176.84;144.18;126.84;130;100"/>
+                <invoke src="./BuildSP_Login.scxml" id="Login">
+                    <qt:editorinfo geometry="-67.50;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="internal" event="Database.Task.Done.*" target="UpdateSession"/>
+            </state>
+            <state id="UpdateSession">
+                <qt:editorinfo geometry="279.79;-166.10;-133.50;-50;135;100" scenegeometry="474.22;177.07;340.72;127.07;135;100"/>
+                <invoke src="./BuildSP_UpdateSession.scxml" id="UpdateSession">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="internal" event="Database.Task.Done.*" target="GetSession"/>
+            </state>
+            <state id="GetSession">
+                <qt:editorinfo geometry="432.77;-161.99;-97;-50;120;100" scenegeometry="627.20;181.18;530.20;131.18;120;100"/>
+                <invoke src="./BuildSP_GetSession.scxml" id="GetSession">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateDeviceId"/>
+            </state>
+            <state id="CreateAccount">
+                <qt:editorinfo geometry="-89.05;-166.61;-144;-50;136;100" scenegeometry="105.38;176.56;-38.62;126.56;136;100"/>
+                <invoke src="./BuildSP_CreateAccount.scxml" id="create_account">
+                    <qt:editorinfo geometry="-67.50;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="internal" event="Database.Task.Done.*" target="Login"/>
+            </state>
+            <state id="UpdateDeviceId">
+                <qt:editorinfo geometry="720.49;-159.06;-198;-50;141;100" scenegeometry="914.92;184.11;716.92;134.11;141;100"/>
+                <invoke src="./BuildSP_UpdateDeviceId.scxml" id="UpdateDeviceId">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdatePassword"/>
+            </state>
+            <state id="UpdatePassword">
+                <qt:editorinfo geometry="673.46;-24.12;-162.50;-50;147;100" scenegeometry="867.89;319.05;705.39;269.05;147;100"/>
+                <invoke src="./BuildSP_UpdatePassword.scxml" id="UpdatePassword">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="GetAccountList"/>
+            </state>
+            <state id="GetAccountList">
+                <qt:editorinfo geometry="551.82;-26.31;-196;-50;137;100" scenegeometry="746.25;316.86;550.25;266.86;137;100"/>
+                <invoke src="./BuildSP_GetAccountList.scxml" id="GetAccountList">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateAccount"/>
+            </state>
+            <state id="UpdateAccount">
+                <qt:editorinfo geometry="334.11;-26.31;-156;-50;162;100" scenegeometry="528.54;316.86;372.54;266.86;162;100"/>
+                <invoke src="./BuildSP_UpdateAccount.scxml" id="UpdateAccount">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateResetPassword"/>
+            </state>
+            <state id="UpdateUserExpertise">
+                <qt:editorinfo geometry="132.17;-21.88;-175.50;-50;201;100" scenegeometry="326.60;321.29;151.10;271.29;201;100"/>
+                <invoke src="./BuildSP_UpdateUserExpertise.scxml" id="UpdateUserExpertise">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.Account.UpdateUserExpertise" target="GetUserExpertiseList"/>
+            </state>
+            <state id="GetUserExpertiseList">
+                <qt:editorinfo geometry="-40.12;-21.62;-226;-50;197;100" scenegeometry="154.31;321.55;-71.69;271.55;197;100"/>
+                <invoke src="./BuildSP_GetUserExpertiseList.scxml" id="GetUserExpertiseList">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="GetDeveloperExpertiseList"/>
+            </state>
+            <state id="GetDeveloperExpertiseList">
+                <qt:editorinfo geometry="-19.85;105.08;-247.50;-50;240;100" scenegeometry="174.58;448.25;-72.92;398.25;240;100"/>
+                <invoke src="./BuildSP_GetDeveloperExpertiseList.scxml" id="GetDeveloperExpertiseList">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="GetExpertiseCategoryList"/>
+            </state>
+            <state id="GetExpertiseCategoryList">
+                <qt:editorinfo geometry="244.44;98.38;-247.50;-50;240;100" scenegeometry="438.87;441.55;191.37;391.55;240;100"/>
+                <invoke src="./BuildSP_GetExpertiseCategoryList.scxml" id="GetExpertiseCategoryList">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="UpdateResetPassword"/>
+            </state>
+            <state id="UpdateResetPassword">
+                <qt:editorinfo geometry="431.63;94.84;-180.50;-50;211;100" scenegeometry="626.06;438.01;445.56;388.01;211;100"/>
+                <invoke src="./BuildSP_UpdateResetPassword.scxml" id="UpdateResetPassword">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.Account.UpdateResetPassword" target="CreateResetPassword"/>
+            </state>
+            <state id="CreateResetPassword">
+                <qt:editorinfo geometry="648.71;97.68;-177.50;-50;205;100" scenegeometry="843.14;440.85;665.64;390.85;205;100"/>
+                <invoke src="./BuildSP_CreateResetPassword.scxml" id="CreateResetPassword">
+                    <qt:editorinfo geometry="-60;-50;0;0;0;0"/>
+                </invoke>
+                <transition type="external" event="Database.Task.Done.*" target="SetupDone"/>
+            </state>
+        </state>
+        <state id="error">
+            <qt:editorinfo geometry="335.49;479.89;-106;-50;166;100" scenegeometry="667.72;600.32;561.72;550.32;166;100"/>
+            <transition type="external" target="Final_SetupDB"/>
+        </state>
+        <state id="SetupDone">
+            <qt:editorinfo geometry="-266.86;497.77;-60;-50;120;100" scenegeometry="65.37;618.20;5.37;568.20;120;100"/>
+            <transition type="external" target="Final_SetupDB">
+                <send event="Account.SetupDB.Done"/>
+            </transition>
+        </state>
+    </state>
+    <final id="Final_SetupDB">
+        <qt:editorinfo geometry="387.90;809.33;-20;-20;40;40" scenegeometry="387.90;809.33;367.90;789.33;40;40"/>
+    </final>
+</scxml>
