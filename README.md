@@ -44,9 +44,14 @@ This project is a tutorial example for the Cell framework. The installation step
 >     docker logs -f Learning-AP
    c. When the following message appears, the ap server has successfully started:
 >     Listening on port 8888
-## 5. Login:<br>
+## 5. Switching from Tutorial1 to Tutorial2:<br>
+   a. Install QT Creator 10 (https://download.qt.io/archive/qtcreator/10.0/10.0.2/)<br>
+   b. Modify scxml/Learning/Learning_service.scxml to make Service.Init point to Tutorial2<br>
+   c. Refresh the browser, and you will see the login screen<br>
+## 6. Login:<br>
    a. Front-end: login http://localhost:8080 with test1/test1<br>
    b. Back-end: login http://localhost:8080 with admin/admin
+
 ---
 本專案為Cell framework的教學範例，安裝步驟如下:
 ## 1. 環境需求:<br>
@@ -92,6 +97,10 @@ This project is a tutorial example for the Cell framework. The installation step
 >     docker logs -f Learning-AP
    c. 等待ap server出現以下的內容，即成功啟動 ap server
 >     Listening on port 8888
-## 5. 登入系統:<br>
+## 5. 從Tutorial1切換至Tutorial2:<br>
+   a. 安裝一下QT Creator 10 (https://download.qt.io/archive/qtcreator/10.0/10.0.2/)<br>
+   b. 修改scxml/Learning/Learning_service.scxml，讓Service.Init指向Tutorial2<br>
+   c. 更新瀏覽器，就會看到登入畫面<br>
+## 6. 登入系統:<br>
    a. 前台: 以test1/test1登入http://localhost:8080<br>
    b. 後台: 以admin/admin登入http://localhost:8080
